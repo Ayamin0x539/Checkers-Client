@@ -8,5 +8,4 @@ public class Board {
 	public Board() {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
 	}
-
-}
+}	
