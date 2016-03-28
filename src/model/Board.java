@@ -9,6 +9,7 @@ public class Board {
 	public Board() {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
 		movesSinceCapture = 0;
+		initBoard();
 	}
 	
 	public boolean isValidSquare(int i, int j) {
@@ -62,7 +63,7 @@ public class Board {
 		return can_attack;
 	}
 	
-	public void initBoard()
+	private void initBoard()
 	{
 		for(int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++)
