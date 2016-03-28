@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Player {
 	private ArrayList<Piece> pieces;
-	private String name;
+	private String name_;
 	
 	public Player(String name) {
-		this.name = name;
+		this.name_ = name;
 		this.pieces = new ArrayList<Piece>();
 	}
 	
@@ -20,10 +20,10 @@ public class Player {
 	}
 	
 	public String getName() {
-		return name;
+		return name_;
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.name_ = name;
 	}
 }
