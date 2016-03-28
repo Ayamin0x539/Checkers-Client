@@ -9,5 +9,15 @@ public class Game {
 		this.player_two = p2;
 		this.board = new Board();
 	}
+	
+	private void assignPieces() {
+		if (player_one.getAssignedColor() == Color.RED) {
+			player_one.setPieces(board.getRedPieces());
+			player_two.setPieces(board.getBlackPieces());
+		} else {
+			player_two.setPieces(board.getRedPieces());
+			player_one.setPieces(board.getBlackPieces());			
+		}
+	}
 
 }
