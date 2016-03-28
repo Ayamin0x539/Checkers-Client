@@ -1,8 +1,17 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Board {
+	// Board properties and representation
 	private final int BOARD_SIZE = 8;
 	private Piece[][] representation;
+
+	// Pieces available to the Players
+	private ArrayList<Piece> red_pieces;
+	private ArrayList<Piece> black_pieces;
+
+	// Move properties
 	private int movesSinceCapture;
 	public enum Direction {UP, DOWN, LEFT, RIGHT};
 
@@ -11,11 +20,11 @@ public class Board {
 		movesSinceCapture = 0;
 		initBoard();
 	}
-	
+
 	public boolean isValidSquare(int i, int j) {
 		return i < BOARD_SIZE && j < BOARD_SIZE;
 	}
-	
+
 	/**
 	 * Checks if a piece can attack another in a given direction.
 	 * @param p The piece.
@@ -33,14 +42,14 @@ public class Board {
 		if (isValidSquare(enemy_i, enemy_j)) {
 			candidate = representation[enemy_i][enemy_j];
 			if (null != candidate && // there exists a piece we can take)
-				candidate.color.equals(p.opposite()) && // it is an enemy piece
-				isValidSquare(end_position_i, end_position_j) && // there is a free space
-				null == representation[end_position_i][end_position_j]) // that we can end up in
-					return true;
+					candidate.color.equals(p.opposite()) && // it is an enemy piece
+					isValidSquare(end_position_i, end_position_j) && // there is a free space
+					null == representation[end_position_i][end_position_j]) // that we can end up in
+				return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Used for validation of moves.
 	 * If returns true after a player chooses a move,
@@ -62,18 +71,20 @@ public class Board {
 		}
 		return can_attack;
 	}
-	
+
 	private void initBoard()
 	{
 		for(int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++)
 			{
-				representation[row][2*col+ (row % 2)] = new Piece(Color.RED, row, 2*col + (row % 2));
-				representation[BOARD_SIZE - 1 - row][2*col + (BOARD_SIZE - 1 - row) %2] = new Piece(Color.BLACK, BOARD_SIZE - 1 - row, 2*col + (BOARD_SIZE - 1 - row) %2);
+				Piece red_piece = new Piece(Color.RED, row, 2*col + (row % 2));
+				Piece black_piece = new Piece(Color.BLACK, BOARD_SIZE - 1 - row, 2*col + (BOARD_SIZE - 1 - row) %2);
+				representation[row][2*col+ (row % 2)] = red_piece;
+				representation[BOARD_SIZE - 1 - row][2*col + (BOARD_SIZE - 1 - row) %2] = black_piece;
 			}
 		}
 	}
-	 
+
 	public void printBoard()
 	{
 		for(int row = 0; row < BOARD_SIZE; row++)
@@ -96,15 +107,31 @@ public class Board {
 					else
 						System.out.print("|B");
 				}
-				
+
 			}
 			System.out.println("|");
 		}
 	}
-	
+
 	public boolean isOccupied(int row, int col)
 	{
 		return representation[row][col] != null;
+	}
+
+	public ArrayList<Piece> getRedPieces() {
+		return red_pieces;
+	}
+
+	public void setRedPieces(ArrayList<Piece> red_pieces) {
+		this.red_pieces = red_pieces;
+	}
+
+	public ArrayList<Piece> getBlackPieces() {
+		return black_pieces;
+	}
+
+	public void setBlackPieces(ArrayList<Piece> black_pieces) {
+		this.black_pieces = black_pieces;
 	}
 
 }
