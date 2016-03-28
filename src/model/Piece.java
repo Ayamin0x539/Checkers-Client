@@ -39,4 +39,8 @@ public class Piece {
 	public Type getType() {
 		return this.type;
 	}
+	
+	public Color getColor() {
+		return this.color;
+	}
 }
