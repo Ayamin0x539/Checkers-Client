@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Player {
 	private ArrayList<Piece> pieces;
-	private String name;
+	private String _name;
 	
 	public Player(String name) {
 		this.name = name;
