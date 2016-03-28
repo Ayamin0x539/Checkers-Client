@@ -18,6 +18,12 @@ public class Piece {
 		this.y = y;
 	}
 	
+	public Color opposite() {
+		if(this.color.equals(Color.RED)) return Color.BLACK;
+		if(this.color.equals(Color.BLACK)) return Color.RED;
+		return null;
+	}
+	
 	public int getX() {
 		return this.x;
 	}
