@@ -58,3 +58,4 @@ public class Board {
 		return can_attack;
 	}
 }
+
