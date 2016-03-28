@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Player {
 	private ArrayList<Piece> pieces;
-	private String name;
+	public final String name;
 	
 	public Player(String name) {
 		this.name = name;
@@ -21,9 +21,5 @@ public class Player {
 	
 	public String getName() {
 		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
 	}
 }
