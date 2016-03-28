@@ -44,14 +44,18 @@ public class Board {
 	 * Used for validation of moves.
 	 * If returns true after a player chooses a move,
 	 * that move is invalid because the player can keep on attacking.
+	 * We go by the convention that black starts out at the "bottom", and 
+	 * red starts out at the "top". Smoke moves before fire.
 	 * @param p
 	 * @return
 	 */
 	public boolean hasAttackVector(Piece p) {
 		boolean can_attack = false;
-		can_attack |= checkAttackDirection(p, Direction.UP, Direction.LEFT);
-		can_attack |= checkAttackDirection(p, Direction.UP, Direction.RIGHT);
-		if(p.getType().equals(Type.KING)) {
+		if (p.color.equals(Color.BLACK) || p.getType().equals(Type.KING)) {
+			can_attack |= checkAttackDirection(p, Direction.UP, Direction.LEFT);
+			can_attack |= checkAttackDirection(p, Direction.UP, Direction.RIGHT);
+		}
+		if (p.color.equals(Color.RED) || p.getType().equals(Type.KING)) {
 			can_attack |= checkAttackDirection(p, Direction.DOWN, Direction.LEFT);
 			can_attack |= checkAttackDirection(p, Direction.DOWN, Direction.RIGHT);
 		}
