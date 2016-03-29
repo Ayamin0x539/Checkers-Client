@@ -18,7 +18,7 @@ public class Board {
 	public Board() {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
 		movesSinceCapture = 0;
-		initBoard();
+		init();
 	}
 
 	public boolean isValidSquare(int i, int j) {
@@ -27,6 +27,7 @@ public class Board {
 
 	/**
 	 * Checks if a piece can attack another in a given direction.
+	 * 
 	 * @param p The piece.
 	 * @param X The direction along the x-coordinate (LEFT or RIGHT).
 	 * @param Y The direction along the y-coordinate (UP or DOWN).
@@ -56,6 +57,7 @@ public class Board {
 	 * that move is invalid because the player can keep on attacking.
 	 * We go by the convention that black starts out at the "bottom", and 
 	 * red starts out at the "top". Smoke moves before fire.
+	 * 
 	 * @param p
 	 * @return
 	 */
@@ -71,8 +73,11 @@ public class Board {
 		}
 		return can_attack;
 	}
-
-	private void initBoard()
+	
+	/**
+	 * Initialize the board putting checker pieces in their starting locations
+	 */
+	private void init()
 	{
 		for(int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++)
@@ -84,8 +89,11 @@ public class Board {
 			}
 		}
 	}
-
-	public void printBoard()
+	
+	/**
+	 * Print the current board representation
+	 */
+	public void print()
 	{
 		for(int row = 0; row < BOARD_SIZE; row++)
 		{
@@ -112,7 +120,11 @@ public class Board {
 			System.out.println("|");
 		}
 	}
-
+	
+	/**
+	 * return true if square contains a piece
+	 * return false otherwise
+	 */
 	public boolean isOccupied(int row, int col)
 	{
 		return representation[row][col] != null;
