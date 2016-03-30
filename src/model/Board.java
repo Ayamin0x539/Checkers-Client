@@ -2,6 +2,14 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * The representation is a 8x8 grid where
+ * A[y][x] denotes the (x, y) indexed piece.
+ * It is swapped because we dereference by "row" first,
+ * which is "y".
+ * @author Ayamin
+ *
+ */
 public class Board {
 	// Board properties and representation
 	private final int BOARD_SIZE = 8;
@@ -22,12 +30,14 @@ public class Board {
 	}
 
 	public boolean isValidSquare(int i, int j) {
-		return i < BOARD_SIZE && j < BOARD_SIZE;
+		return 	0 <= i && i < BOARD_SIZE && 
+				0 <= j && j < BOARD_SIZE;
 	}
 
 	/**
 	 * Checks if a piece can attack another in a given direction.
-	 * 
+	 * Up is negative y direction, down is positive y direction.
+	 * Left is negative x direction, right is positive x direction.
 	 * @param p The piece.
 	 * @param X The direction along the x-coordinate (LEFT or RIGHT).
 	 * @param Y The direction along the y-coordinate (UP or DOWN).
@@ -35,17 +45,17 @@ public class Board {
 	 */
 	public boolean checkAttackDirection(Piece p, Direction X, Direction Y) {
 		Piece candidate = null;
-		int i = p.getX(), j = p.getY();
+		int i = p.getX(), j = p.getY(); // y is row, x is column
 		int enemy_i = X.equals(Direction.LEFT) ? i-1 : i+1;
-		int enemy_j = Y.equals(Direction.UP) ? j+1 : j-1;
+		int enemy_j = Y.equals(Direction.UP) ? j-1 : j+1;
 		int end_position_i = X.equals(Direction.LEFT) ? i-2 : i+2;
-		int end_position_j = Y.equals(Direction.UP) ? j+2: j-2;
-		if (isValidSquare(enemy_i, enemy_j)) {
-			candidate = representation[enemy_i][enemy_j];
+		int end_position_j = Y.equals(Direction.UP) ? j-2: j+2;
+		if (isValidSquare(enemy_j, enemy_i)) {
+			candidate = representation[enemy_j][enemy_i];
 			if (null != candidate && // there exists a piece we can take)
 					candidate.color.equals(p.opposite()) && // it is an enemy piece
-					isValidSquare(end_position_i, end_position_j) && // there is a free space
-					null == representation[end_position_i][end_position_j]) // that we can end up in
+					isValidSquare(end_position_j, end_position_i) && // there is a free space
+					null == representation[end_position_j][end_position_i]) // that we can end up in
 				return true;
 		}
 		return false;
@@ -57,6 +67,9 @@ public class Board {
 	 * that move is invalid because the player can keep on attacking.
 	 * We go by the convention that black starts out at the "bottom", and 
 	 * red starts out at the "top". Smoke moves before fire.
+	 * 
+	 * Up is negative y direction, down is positive y direction.
+	 * Left is negative x direction, right is positive x direction.
 	 * 
 	 * @param p
 	 * @return
@@ -78,15 +91,18 @@ public class Board {
 	 * Used for validation of moves.
 	 * We go by the convention that black starts out at the "bottom", and 
 	 * red starts out at the "top". Smoke moves before fire.
+	 * Up is negative y direction, down is positive y direction.
+	 * Left is negative x direction, right is positive x direction.
 	 * A piece can move if the spot is available AND the move matches the color.
 	 * (Black can only go up and red can only go down, unless they are kinged.)
 	 * @param p
 	 * @return true if the piece can move to the specified coordinates.
 	 */
 	public boolean canMove(Piece p, int x, int y) {
-		boolean spot_available = this.isValidSquare(x, y) && (null != this.representation[x][y]);
-		boolean is_moving_up = (y == p.getY() + 1);
-		boolean is_moving_down = (y == p.getY() - 1);
+		if(!this.isValidSquare(y, x)) return false;
+		boolean spot_available = (null == this.representation[y][x]);
+		boolean is_moving_up = (y == p.getY() - 1);
+		boolean is_moving_down = (y == p.getY() + 1);
 		boolean is_moving_left = (x == p.getX() - 1);
 		boolean is_moving_right = (x == p.getX() + 1);
 		
@@ -114,8 +130,8 @@ public class Board {
 	 * @return
 	 */
 	public boolean canMove(int src_x, int src_y, int dest_x, int dest_y) {
-		if (!(this.isValidSquare(src_x, src_y) && this.isValidSquare(dest_x, dest_y))) return false;
-		Piece p = this.representation[src_x][src_y];
+		if (!(this.isValidSquare(src_y, src_x) && this.isValidSquare(dest_y, dest_x))) return false;
+		Piece p = this.representation[src_y][src_x];
 		if (null == p) return false;
 		return this.canMove(p, dest_x, dest_y);
 	}
@@ -128,8 +144,8 @@ public class Board {
 		for(int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++)
 			{
-				Piece red_piece = new Piece(Color.RED, row, 2*col + (row % 2));
-				Piece black_piece = new Piece(Color.BLACK, BOARD_SIZE - 1 - row, 2*col + (BOARD_SIZE - 1 - row) %2);
+				Piece red_piece = new Piece(Color.RED, 2*col + (row % 2), row);
+				Piece black_piece = new Piece(Color.BLACK, 2*col + (BOARD_SIZE - 1 - row) %2, BOARD_SIZE - 1 - row);
 				representation[row][2*col+ (row % 2)] = red_piece;
 				representation[BOARD_SIZE - 1 - row][2*col + (BOARD_SIZE - 1 - row) %2] = black_piece;
 			}
