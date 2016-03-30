@@ -43,7 +43,7 @@ public class Board {
 	 * @param Y The direction along the y-coordinate (UP or DOWN).
 	 * @return
 	 */
-	public boolean checkAttackDirection(Piece p, Direction X, Direction Y) {
+	public boolean checkAttackDirection(Piece p, Piece[][] image, Direction X, Direction Y) {
 		Piece candidate = null;
 		int i = p.getX(), j = p.getY(); // y is row, x is column
 		int enemy_i = X.equals(Direction.LEFT) ? i-1 : i+1;
@@ -51,11 +51,11 @@ public class Board {
 		int end_position_i = X.equals(Direction.LEFT) ? i-2 : i+2;
 		int end_position_j = Y.equals(Direction.UP) ? j-2: j+2;
 		if (isValidSquare(enemy_j, enemy_i)) {
-			candidate = representation[enemy_j][enemy_i];
+			candidate = image[enemy_j][enemy_i];
 			if (null != candidate && // there exists a piece we can take)
 					candidate.color.equals(p.opposite()) && // it is an enemy piece
 					isValidSquare(end_position_j, end_position_i) && // there is a free space
-					null == representation[end_position_j][end_position_i]) // that we can end up in
+					null == image[end_position_j][end_position_i]) // that we can end up in
 				return true;
 		}
 		return false;
@@ -74,15 +74,15 @@ public class Board {
 	 * @param p
 	 * @return
 	 */
-	public boolean hasAttackVector(Piece p) {
+	public boolean hasAttackVector(Piece p, Piece[][] image) {
 		boolean can_attack = false;
 		if (p.color.equals(Color.BLACK) || p.getType().equals(Type.KING)) {
-			can_attack |= checkAttackDirection(p, Direction.UP, Direction.LEFT);
-			can_attack |= checkAttackDirection(p, Direction.UP, Direction.RIGHT);
+			can_attack |= checkAttackDirection(p, image, Direction.UP, Direction.LEFT);
+			can_attack |= checkAttackDirection(p, image, Direction.UP, Direction.RIGHT);
 		}
 		if (p.color.equals(Color.RED) || p.getType().equals(Type.KING)) {
-			can_attack |= checkAttackDirection(p, Direction.DOWN, Direction.LEFT);
-			can_attack |= checkAttackDirection(p, Direction.DOWN, Direction.RIGHT);
+			can_attack |= checkAttackDirection(p, image, Direction.DOWN, Direction.LEFT);
+			can_attack |= checkAttackDirection(p, image, Direction.DOWN, Direction.RIGHT);
 		}
 		return can_attack;
 	}
@@ -134,6 +134,17 @@ public class Board {
 		Piece p = this.representation[src_y][src_x];
 		if (null == p) return false;
 		return this.canMove(p, dest_x, dest_y);
+	}
+	
+	public boolean tryToMove(int src_x, int src_y, int dest_x, int dest_y) {
+		if (canMove(src_x, src_y, dest_x, dest_y)) {
+			Piece piece = this.representation[src_y][src_x];
+			this.representation[src_y][src_x] = null;
+			this.representation[dest_y][dest_x] = piece;
+			return true;
+		}
+		else if (canJump)
+		
 	}
 	
 	/**
