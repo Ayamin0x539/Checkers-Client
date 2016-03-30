@@ -32,6 +32,7 @@ public class CheckersCanvas extends JPanel {
 			if (i % 2 == 0) {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					Square black = new Square(Color.BLACK, i, j*2);
+					black.add(new GUIPiece(Color.WHITE));
 					Square red = new Square(Color.RED, i, j*2 + 1);
 					this.add(black);
 					blackSquares.add(black);
