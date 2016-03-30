@@ -14,7 +14,6 @@ public class BoardTest {
 			"Cannot move from (" + i + "," + j +") to (" + dest_i + "," + dest_j + ").";
 	}
 	
-	
 	public static void movementTest() {
 		Board b = new Board();
 		assertCannotMove(b, 0, 6, 1, 5); // move black onto another
@@ -22,8 +21,8 @@ public class BoardTest {
 		assertCannotMove(b, 0, 2, -1, 3); // move red out of bounds
 		assertCannotMove(b, 7, 5, 8, 4); // move black out of bounds
 		assertCanMove(b, 3, 5, 4, 4); // move black up right
-		assertCanMove(b, 3, 5, 2, 3); // move black up left
-		assertCanMove(b, 1, 5, 2, 4); // move blkac up right
+		assertCanMove(b, 3, 5, 2, 4); // move black up left
+		assertCanMove(b, 1, 5, 2, 4); // move black up right
 		assertCanMove(b, 0, 2, 1, 3); // move red down right
 		assertCanMove(b, 4, 2, 3, 3); // move red down left
 		assertCanMove(b, 4, 2, 5, 3); // move red down right
