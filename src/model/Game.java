@@ -8,6 +8,7 @@ public class Game {
 		this.player_one = p1;
 		this.player_two = p2;
 		this.board = new Board();
+		assignPieces();
 	}
 	
 	private void assignPieces() {
