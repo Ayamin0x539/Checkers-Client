@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import model.Board;
-import test.Square;
 
 public class CheckersCanvas extends JPanel {
 	
@@ -31,7 +30,7 @@ public class CheckersCanvas extends JPanel {
 	public void initSquares() {
 		for (int i = 0; i < BOARD_DIM; ++i) {
 			if (i % 2 == 0) {
-				for (int j = 0; j < BOARD_DIM/4; ++j) {
+				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					Square black = new Square(Color.BLACK, i, j*2);
 					Square red = new Square(Color.RED, i, j*2 + 1);
 					this.add(black);
@@ -40,7 +39,7 @@ public class CheckersCanvas extends JPanel {
 					redSquares.add(red);
 				}
 			} else {
-				for (int j = 0; j < BOARD_DIM/4; ++j) {
+				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					Square black = new Square(Color.BLACK, i, j*2 + 1);
 					Square red = new Square(Color.RED, i, j*2);
 					this.add(red);
