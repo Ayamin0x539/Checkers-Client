@@ -75,6 +75,52 @@ public class Board {
 	}
 	
 	/**
+	 * Used for validation of moves.
+	 * We go by the convention that black starts out at the "bottom", and 
+	 * red starts out at the "top". Smoke moves before fire.
+	 * A piece can move if the spot is available AND the move matches the color.
+	 * (Black can only go up and red can only go down, unless they are kinged.)
+	 * @param p
+	 * @return true if the piece can move to the specified coordinates.
+	 */
+	public boolean canMove(Piece p, int x, int y) {
+		boolean spot_available = this.isValidSquare(x, y) && (null != this.representation[x][y]);
+		boolean is_moving_up = (y == p.getY() + 1);
+		boolean is_moving_down = (y == p.getY() - 1);
+		boolean is_moving_left = (x == p.getX() - 1);
+		boolean is_moving_right = (x == p.getX() + 1);
+		
+		// Spot must be available and must be moving exactly one to the left or right
+		if (spot_available && (is_moving_left || is_moving_right)) {
+			if (p.color.equals(Color.BLACK) || p.getType().equals(Type.KING)) {
+				if (is_moving_up) return true;
+			}
+			if (p.color.equals(Color.RED) || p.getType().equals(Type.KING)) {
+				if (is_moving_down) return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Tests whether we can move a piece at (src_x, src_y)
+	 * to a spot on the board at (dest_x, dest_y).
+	 * Delegates to canMove(Piece, int, int).
+	 * If a piece does not exist at the source, returns false.
+	 * @param src_x
+	 * @param src_y
+	 * @param dest_x
+	 * @param dest_y
+	 * @return
+	 */
+	public boolean canMove(int src_x, int src_y, int dest_x, int dest_y) {
+		if (!(this.isValidSquare(src_x, src_y) && this.isValidSquare(dest_x, dest_y))) return false;
+		Piece p = this.representation[src_x][src_y];
+		if (null == p) return false;
+		return this.canMove(p, dest_x, dest_y);
+	}
+	
+	/**
 	 * Initialize the board putting checker pieces in their starting locations
 	 */
 	private void init()
