@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
 public class GUIPiece extends JButton {
@@ -15,6 +16,8 @@ public class GUIPiece extends JButton {
 		this.color = color;
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
+		this.setFocusable(false);
+		this.setOpaque(false);
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -29,8 +32,8 @@ public class GUIPiece extends JButton {
 		  hints.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		  hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		  g2.setRenderingHints(hints);
-		  g2.fillOval(0, 0, getSize().width,getSize().height-1);
+		  g2.fillOval(5, 5, getSize().width-10,getSize().height-10);
 		  super.paintComponent(g2);
-		}
+	}
 
 }

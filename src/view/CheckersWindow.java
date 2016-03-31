@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 
 public class CheckersWindow extends JFrame {
@@ -13,8 +15,9 @@ public class CheckersWindow extends JFrame {
 		this.setSize(WIDTH, HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		this.getContentPane().add(new CheckersCanvas());
+		this.getContentPane().add(new CheckersCanvas(), BorderLayout.CENTER);
 		this.setVisible(true);
+		this.setResizable(false);
 		
 		//pack();
 	}
