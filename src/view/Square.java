@@ -4,48 +4,33 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import javax.swing.*;
+import model.Location;
 
 public class Square extends JPanel implements MouseListener {
 	private Color color;
-	private int row;
-	private int column;
-	private GUIPiece piece;
+	private final Location location;
+	private Checker piece;
 	private boolean selected;
 	
-	public Square(Color color, int row, int column) {
+	public Square(Color color, Location location) {
 		super();
 		this.color = color;
-		this.setRow(row);
+		this.location = location;
 		this.selected = false;
-		this.setColumn(column);
 		this.setBackground(color);
 		this.setLayout(new BorderLayout());
 	}
 
-	public int getRow() {
-		return row;
+	public Location getCellLocation() {
+		return location;
 	}
 
-	public void setRow(int row) {
-		this.row = row;
-	}
-
-	public int getColumn() {
-		return column;
-	}
-
-	public void setColumn(int column) {
-		this.column = column;
-	}
-
-	public GUIPiece getPiece() {
+	public Checker getPiece() {
 		return piece;
 	}
 
-	public void setPiece(GUIPiece piece) {
+	public void setPiece(Checker piece) {
 		this.piece = piece;
 		this.add(piece);
 		piece.addMouseListener(this);
@@ -58,7 +43,6 @@ public class Square extends JPanel implements MouseListener {
 
 	public void setSelected(boolean val) {
 		if (val) {
-			System.out.println("setting border");
 			this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		} else {
 			this.setBorder(null);

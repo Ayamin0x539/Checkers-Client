@@ -7,58 +7,72 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import model.Board;
+import model.Location;
+import model.Piece;
 
 public class CheckersCanvas extends JPanel implements MouseListener {
 
 	public static final int BOARD_DIM = 8;
 
-	private ArrayList<Square> blackSquares;
-	private ArrayList<Square> redSquares;
+	private Square[][] board;
 
 	private Square moveDestination;
 	private Square moveSource;
 
-	/* Checker board representation */
-	Board board;
+
 	GridBagConstraints layoutConstraints;
 
 	public CheckersCanvas() {
 		super(new GridLayout(BOARD_DIM, BOARD_DIM));
-		this.blackSquares = new ArrayList<Square>();
-		this.redSquares = new ArrayList<Square>();
+		this.board = new Square[BOARD_DIM][BOARD_DIM];
 		initSquares();
+		initCheckers();
 	}
 
 	public void initSquares() {
 		for (int i = 0; i < BOARD_DIM; ++i) {
 			if (i % 2 == 0) {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
-					Square black = new Square(Color.BLACK, i, j*2);
-					black.addMouseListener(this);
-					GUIPiece p = new GUIPiece(Color.WHITE);
-					black.setPiece(new GUIPiece(Color.WHITE));
-					Square red = new Square(Color.RED, i, j*2 + 1);
-					red.addMouseListener(this);
-					this.add(black);
-					blackSquares.add(black);
-					this.add(red);
-					redSquares.add(red);
+					/* Create a black square */
+					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2));
+					board[i][j*2] = blackSquare;
+					blackSquare.addMouseListener(this);
+					this.add(blackSquare);
+
+					/* Create a red square */
+					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2 + 1));
+					board[i][j*2 + 1] = redSquare;
+					redSquare.addMouseListener(this);
+					this.add(redSquare);
 				}
 			} else {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
-					Square black = new Square(Color.BLACK, i, j*2 + 1);
-					black.addMouseListener(this);
-					Square red = new Square(Color.RED, i, j*2);
-					red.addMouseListener(this);
-					this.add(red);
-					blackSquares.add(red);
-					this.add(black);
-					redSquares.add(black);
+					/* Create a red square */
+					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2));
+					board[i][j*2] = redSquare;
+					redSquare.addMouseListener(this);
+					this.add(redSquare);
+					
+					/* Create a black square */
+					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2 + 1));
+					board[i][j*2 + 1] = blackSquare;
+					blackSquare.addMouseListener(this);
+					this.add(blackSquare);
 				}
+			}
+		}
+	}
+	
+	private void initCheckers() {
+		for (int row = 0; row < BOARD_DIM / 2 - 1; ++row) {
+			for (int col = 0; col < BOARD_DIM / 2; ++col) {
+				Checker redChecker = new Checker(new Color(255, 51, 51));
+				Checker blackChecker = new Checker(new Color(89, 89, 89));
+				board[row][2*col+ (row % 2)].setPiece(redChecker);
+				board[BOARD_DIM - 1 - row][2*col + (BOARD_DIM - 1 - row) %2].setPiece(blackChecker);
 			}
 		}
 	}
