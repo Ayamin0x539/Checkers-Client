@@ -81,4 +81,5 @@ public class CheckersCanvas extends JPanel {
 			}
 		}
 	}
+
 }
