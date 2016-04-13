@@ -1,51 +1,56 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import model.Board;
 import model.Location;
-import model.Piece;
 
-public class CheckersCanvas extends JPanel implements MouseListener {
+public class CheckersCanvas extends JPanel {
 
 	public static final int BOARD_DIM = 8;
+	public static final int CANVAS_SIZE = 800;
 
 	private Square[][] board;
-
-	private Square moveDestination;
-	private Square moveSource;
 
 
 	GridBagConstraints layoutConstraints;
 
-	public CheckersCanvas() {
+	public CheckersCanvas(GamePanel gamePanel) {
 		super(new GridLayout(BOARD_DIM, BOARD_DIM));
 		this.board = new Square[BOARD_DIM][BOARD_DIM];
-		initSquares();
+		
+		this.setPreferredSize(new Dimension(CANVAS_SIZE, CANVAS_SIZE));
+		this.setMaximumSize(new Dimension(CANVAS_SIZE, CANVAS_SIZE));
+		this.setMinimumSize(new Dimension(CANVAS_SIZE, CANVAS_SIZE));
+		
+		initCanvas(gamePanel);
+	}
+	
+	private void initCanvas(GamePanel gamePanel) {
+		initSquares(gamePanel);
 		initCheckers();
 	}
 
-	public void initSquares() {
+	private void initSquares(GamePanel gamePanel) {
 		for (int i = 0; i < BOARD_DIM; ++i) {
 			if (i % 2 == 0) {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					/* Create a black square */
 					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2));
 					board[i][j*2] = blackSquare;
-					blackSquare.addMouseListener(this);
+					blackSquare.addMouseListener(gamePanel);
 					this.add(blackSquare);
 
 					/* Create a red square */
 					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = redSquare;
-					redSquare.addMouseListener(this);
+					redSquare.addMouseListener(gamePanel);
 					this.add(redSquare);
 				}
 			} else {
@@ -53,13 +58,13 @@ public class CheckersCanvas extends JPanel implements MouseListener {
 					/* Create a red square */
 					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2));
 					board[i][j*2] = redSquare;
-					redSquare.addMouseListener(this);
+					redSquare.addMouseListener(gamePanel);
 					this.add(redSquare);
 					
 					/* Create a black square */
 					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = blackSquare;
-					blackSquare.addMouseListener(this);
+					blackSquare.addMouseListener(gamePanel);
 					this.add(blackSquare);
 				}
 			}
@@ -75,61 +80,5 @@ public class CheckersCanvas extends JPanel implements MouseListener {
 				board[BOARD_DIM - 1 - row][2*col + (BOARD_DIM - 1 - row) %2].setPiece(blackChecker);
 			}
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		Square square = (Square) e.getComponent();
-		if(square.hasPiece()) {
-			if (!square.isSelected()) {
-				square.setSelected(true);
-				if (moveSource != null)
-					moveSource.setSelected(false);
-				if (moveDestination != null)
-					moveDestination.setSelected(false);
-				moveDestination = null;
-				moveSource = square;
-			} else {
-				if (square == moveSource)
-					moveSource = null;
-				square.setSelected(false);
-			}
-		} else {
-			
-			if (!square.isSelected()) {
-				square.setSelected(true);
-				if (moveDestination != null)
-					moveDestination.setSelected(false);
-				moveDestination = square;
-			} else {
-				if (square == moveDestination)
-					moveDestination = null;
-				square.setSelected(false);
-			}
-		}
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-
 	}
 }
