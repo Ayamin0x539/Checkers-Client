@@ -28,5 +28,6 @@ public class GUITest {
 			// handle exception
 		}
 		CheckersWindow window = new CheckersWindow();
+		window.open();
 	}
 }

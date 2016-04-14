@@ -7,8 +7,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JOptionPane;
+
 public class GameEventListener implements MouseListener, KeyListener, ActionListener {
-	
+
+	/**
+	 * An instance of {@link GamePanel} for which this listener is listening.
+	 */
 	private GamePanel gamePanel;
 
 	@Override
@@ -32,7 +37,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 		}
 
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 
@@ -45,19 +50,27 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 			System.out.println("Moving piece.");
 			// TODO: Request a move from the controller.
 		}
-		
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {}
-	
+
 	public void setGamePanel(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        System.exit(0);
-    }
+		if (e.getActionCommand().equals("New game")) {
+			// TODO: Request the controller for a new game
+		} else if (e.getActionCommand().equals("Quit")) {
+			System.exit(0);
+		} else if (e.getActionCommand().equals("Instructions")) {
+			// TODO: Create an instructions dialog box, this is just for testing
+			JOptionPane.showMessageDialog(null, "<html><ol><li>instr 1</li>"
+					+ "</ol></html>", "Instructions", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
 }
 

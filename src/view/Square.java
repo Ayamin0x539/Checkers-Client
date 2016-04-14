@@ -11,6 +11,7 @@ import model.Location;
  * @author john
  *
  */
+@SuppressWarnings("serial")
 public class Square extends JPanel implements MouseListener {
 
 	/** 
@@ -42,20 +43,34 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 
+	/**
+	 * Initializes the properties of the square such as color and layout.
+	 * @param color	A {@link Color} object representing the square's color. 
+	 */
 	private void initSquare(Color color) {
 		this.setBackground(color);
 		this.setLayout(new BorderLayout());
 	}
 
 
+	/**
+	 * {@link Square#location}
+	 */
 	public Location getCellLocation() {
 		return location;
 	}
 
+	/**
+	 * {@link Square#piece}
+	 */
 	public Checker getPiece() {
 		return piece;
 	}
 
+	/**
+	 * Adds the given piece to the square's panel.
+	 * @param piece A {@link Checker} object to place in the square.
+	 */
 	public void setPiece(Checker piece) {
 		this.piece = piece;
 		this.add(piece);
@@ -63,10 +78,18 @@ public class Square extends JPanel implements MouseListener {
 		this.validate();
 	}
 	
+	/**
+	 * {@link Square#selected}
+	 */
 	public boolean isSelected() {
 		return this.selected;
 	}
 
+	/**
+	 * Set's the {@link Square#selected} member to the given value and updates
+	 * the panel's border.
+	 * @param val The boolean value to set the <code>selected</code> member to.
+	 */
 	public void setSelected(boolean val) {
 		if (val) {
 			this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
@@ -76,41 +99,34 @@ public class Square extends JPanel implements MouseListener {
 		this.selected = val;
 	}
 	
+	/**
+	 * Check's if the square contains a {@link Checker} object or not.
+	 * @return	<code>true</code> if the square contains a checker. <br />
+	 * 			<code>false</code> otherwise.
+	 */
 	public boolean hasPiece() {
 		return this.piece != null;
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
+		/* Send the event to the lister of the square (GameEventListener) */
 		MouseEvent newE = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), 
 				e.getClickCount(), e.getX(), e.getY(), e.isPopupTrigger());
-		//this.dispatchEvent(newE);
-		
+		this.dispatchEvent(newE);	
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseClicked(MouseEvent arg0) {}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {}
 
 
 }

@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel {
 	private JLabel messageBar;
 	private CheckersCanvas canvas;
@@ -16,23 +17,29 @@ public class GamePanel extends JPanel {
 
 	public GamePanel(GameEventListener gameListener) {
 		super(new GridBagLayout());
+		
+		/* Initialize the layout manager */
 		this.layoutConstraints = new GridBagConstraints();
-		this.messageBar = new JLabel("Select a piece to move.");
-		this.addKeyListener(gameListener);
-		this.canvas = new CheckersCanvas(gameListener);
-		this.setFocusable(true);
 		this.layoutConstraints.gridy = 0;
+		
+		/* Add the game listener as a listener */
+		this.addKeyListener(gameListener);
+		this.setFocusable(true);
+		
+		/* Initialize the components */
 		this.initMessageBar();
-		this.initCanvas();
+		this.initCanvas(gameListener);
 	}
 
 	private void initMessageBar() {
+		this.messageBar = new JLabel("Select a piece to move.");
 		this.layoutConstraints.ipady = 10;
 		this.add(this.messageBar, layoutConstraints);
 		this.layoutConstraints.gridy++;
 	}
 	
-	private void initCanvas() {
+	private void initCanvas(GameEventListener gameListener) {
+		this.canvas = new CheckersCanvas(gameListener);
 		this.add(this.canvas, layoutConstraints);
 		this.layoutConstraints.gridy++;
 	}

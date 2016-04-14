@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import model.Location;
 
+@SuppressWarnings("serial")
 public class CheckersCanvas extends JPanel {
 
 	public static final int BOARD_DIM = 8;

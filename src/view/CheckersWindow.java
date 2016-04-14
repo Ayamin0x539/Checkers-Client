@@ -1,24 +1,28 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
-
+@SuppressWarnings("serial")
 public class CheckersWindow extends JFrame {
-	
+	/* Constants for the size of the window */
 	public static final int HEIGHT = 868;
 	public static final int WIDTH = 800;
+	
+	/**
+	 * The {@link GamePanel} instance which contains all of the game's visual
+	 * components.
+	 */
 	private GamePanel gamePanel;
+	
+	/**
+	 * The {@link GameEventListener} instance which will be listening to all
+	 * of the game panel's component's
+	 */
 	private GameEventListener gameListener;
 	
 	
@@ -28,61 +32,64 @@ public class CheckersWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		this.createMenuBar();
+		
+		/* MUST be done in this order */
 		this.initGameListener();
+		this.createMenuBar();
 		this.initGamePanel();
-		this.setVisible(true);
 		this.pack();
 	}
 	
+	/**
+	 * Opens the window by setting the frame's visibility
+	 */
+	public void open() {
+		this.setVisible(true);
+	}
+
+	/**
+	 * Initializes the {@link GameEventListener} instance.
+	 */
 	private void initGameListener() {
 		this.gameListener = new GameEventListener();
 	}
 
+	/**
+	 * Initializes the frame's menu bar and all of its items.
+	 */
 	private void createMenuBar() {
 		JMenuBar menubar = new JMenuBar(); 
 		JMenu file = new JMenu("File");
-		//New Game
+		/* New Game Option */
 		JMenuItem newGame = new JMenuItem("New game");
 		newGame.setMnemonic(KeyEvent.VK_N);
 		newGame.setToolTipText("Start a new game");
-		newGame.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//this.getContentPane().add(new CheckersCanvas(), BorderLayout.CENTER);
-			}
-		});
-		//Quit
+		newGame.addActionListener(gameListener);
+		
+		/* Quit Option */
 		JMenuItem quit = new JMenuItem("Quit");
 		quit.setMnemonic(KeyEvent.VK_Q);
 		quit.setToolTipText("Exit application");
-		quit.addActionListener(new ActionListener() {
-			@Override 
-			public void actionPerformed(ActionEvent e) {
-	                System.exit(0);
-	            }
-	        });
-		//Rules
+		quit.addActionListener(gameListener);
+		
+		/* Instructions Option */
 		JMenuItem instructions = new JMenuItem("Instructions");
 		instructions.setMnemonic(KeyEvent.VK_I);
 		instructions.setToolTipText("How to play");
-		instructions.addActionListener(new ActionListener() {
-			@Override 
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "<html><ol><li>instr 1</li></ol></html>", "title", JOptionPane.INFORMATION_MESSAGE);
-				//JOptionPane.showMessageDialog(null, "<html>instr 1<br></html>", "title", JOptionPane.INFORMATION_MESSAGE);
-	            }
-	        });
+		instructions.addActionListener(gameListener);
 		
+		/* Add items to menu bar */
 		file.add(quit);
 		file.add(newGame);
 		file.add(instructions);
 		menubar.add(file);
 		menubar.setVisible(true);
-		setJMenuBar(menubar);	
+		this.setJMenuBar(menubar);	
 	}
 	
-	
+	/**
+	 * Initializes the {@link GamePanel} instance 
+	 */
 	private void initGamePanel() {
 		this.gamePanel = new GamePanel(gameListener);
 		this.getContentPane().add(this.gamePanel);

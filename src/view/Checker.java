@@ -8,6 +8,7 @@ import javax.swing.*;
  * @author john
  *
  */
+@SuppressWarnings("serial")
 public class Checker extends JPanel {
 
 	/* The color of the checker */
