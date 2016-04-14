@@ -1,4 +1,8 @@
-package model;
+package controller;
+
+import model.Board;
+import model.Color;
+import model.Player;
 
 public class Game {
 	private Board board;

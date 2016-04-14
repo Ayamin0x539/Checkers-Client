@@ -64,7 +64,7 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public boolean isSelected() {
-		return selected;
+		return this.selected;
 	}
 
 	public void setSelected(boolean val) {
@@ -77,7 +77,7 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public boolean hasPiece() {
-		return piece != null;
+		return this.piece != null;
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class Square extends JPanel implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 		MouseEvent newE = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), 
 				e.getClickCount(), e.getX(), e.getY(), e.isPopupTrigger());
-		this.dispatchEvent(newE);
+		//this.dispatchEvent(newE);
 		
 	}
 

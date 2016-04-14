@@ -16,9 +16,10 @@ import javax.swing.JOptionPane;
 
 public class CheckersWindow extends JFrame {
 	
-	public static final int HEIGHT = 825;
+	public static final int HEIGHT = 868;
 	public static final int WIDTH = 800;
 	private GamePanel gamePanel;
+	private GameEventListener gameListener;
 	
 	
 	public CheckersWindow() {
@@ -27,14 +28,17 @@ public class CheckersWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		initGamePanel();
 		this.createMenuBar();
+		this.initGameListener();
+		this.initGamePanel();
 		this.setVisible(true);
-		this.setResizable(false);
-		
-		//pack();
+		this.pack();
 	}
 	
+	private void initGameListener() {
+		this.gameListener = new GameEventListener();
+	}
+
 	private void createMenuBar() {
 		JMenuBar menubar = new JMenuBar(); 
 		JMenu file = new JMenu("File");
@@ -80,8 +84,9 @@ public class CheckersWindow extends JFrame {
 	
 	
 	private void initGamePanel() {
-		this.gamePanel = new GamePanel();
-		this.getContentPane().add(this.gamePanel, BorderLayout.CENTER);
+		this.gamePanel = new GamePanel(gameListener);
+		this.getContentPane().add(this.gamePanel);
+		this.gameListener.setGamePanel(gamePanel);
 	}
 	
 }

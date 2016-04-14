@@ -8,26 +8,24 @@ import javax.swing.*;
  * @author john
  *
  */
-public class Checker extends JButton {
+public class Checker extends JPanel {
 
 	/* The color of the checker */
 	private Color color;
 	
 	public Checker(Color color) {
-		super("");
+		super();
 		this.color = color;
-		initButtonProperties();
+		initChecker();
 	}
 	
 	/**
 	 * Initializes the properties of the Checker as a JButton
 	 */
-	private void initButtonProperties() {
-		/* We want the JButton to actually be completely transparent */
-		this.setContentAreaFilled(false);
-		this.setBorderPainted(false);
+	private void initChecker() {
 		this.setFocusable(false);
 		this.setOpaque(false);
+		this.setEnabled(false);
 	}
 
 	/**

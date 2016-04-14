@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
@@ -21,7 +19,7 @@ public class CheckersCanvas extends JPanel {
 
 	GridBagConstraints layoutConstraints;
 
-	public CheckersCanvas(GamePanel gamePanel) {
+	public CheckersCanvas(GameEventListener boardListener) {
 		super(new GridLayout(BOARD_DIM, BOARD_DIM));
 		this.board = new Square[BOARD_DIM][BOARD_DIM];
 		
@@ -29,28 +27,28 @@ public class CheckersCanvas extends JPanel {
 		this.setMaximumSize(new Dimension(CANVAS_SIZE, CANVAS_SIZE));
 		this.setMinimumSize(new Dimension(CANVAS_SIZE, CANVAS_SIZE));
 		
-		initCanvas(gamePanel);
+		this.initCanvas(boardListener);
 	}
 	
-	private void initCanvas(GamePanel gamePanel) {
-		initSquares(gamePanel);
+	private void initCanvas(GameEventListener boardListener) {
+		initSquares(boardListener);
 		initCheckers();
 	}
 
-	private void initSquares(GamePanel gamePanel) {
+	private void initSquares(GameEventListener boardListener) {
 		for (int i = 0; i < BOARD_DIM; ++i) {
 			if (i % 2 == 0) {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					/* Create a black square */
 					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2));
 					board[i][j*2] = blackSquare;
-					blackSquare.addMouseListener(gamePanel);
+					blackSquare.addMouseListener(boardListener);
 					this.add(blackSquare);
 
 					/* Create a red square */
 					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = redSquare;
-					redSquare.addMouseListener(gamePanel);
+					redSquare.addMouseListener(boardListener);
 					this.add(redSquare);
 				}
 			} else {
@@ -58,13 +56,13 @@ public class CheckersCanvas extends JPanel {
 					/* Create a red square */
 					Square redSquare = new Square(new Color(150, 0, 0), new Location(i, j*2));
 					board[i][j*2] = redSquare;
-					redSquare.addMouseListener(gamePanel);
+					redSquare.addMouseListener(boardListener);
 					this.add(redSquare);
 					
 					/* Create a black square */
 					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = blackSquare;
-					blackSquare.addMouseListener(gamePanel);
+					blackSquare.addMouseListener(boardListener);
 					this.add(blackSquare);
 				}
 			}
