@@ -2,20 +2,17 @@ package model;
 
 public class Piece {
 	public final Color color;
-	private int x;
-	private int y;
+	private Location location;
 	private Type type;
 	
-	public Piece(Color color, int x, int y) {
+	public Piece(Color color, int row, int col) {
 		this.color = color;
-		this.x = x;
-		this.y = y;
+		this.location = new Location(row, col);
 		this.type = Type.NORMAL;
 	}
 	
-	public void updateCoordinates(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 	
 	public Color opposite() {
@@ -24,12 +21,8 @@ public class Piece {
 		return null;
 	}
 	
-	public int getX() {
-		return this.x;
-	}
-	
-	public int getY() {
-		return this.y;
+	public Location getLocation() {
+		return location;
 	}
 	
 	public void promote() {
