@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 /**
  * The representation is a 8x8 grid where
- * A[y][x] denotes the (x, y) indexed piece.
- * It is swapped because we dereference by "row" first,
- * which is "y".
+ * A[row][col] marks the position of the checker piece.
+ * Smoke starts at lower row and fire starts at higher row.
  * @author Ayamin
  *
  */
@@ -14,10 +13,6 @@ public class Board {
 	// Board properties and representation
 	private final int BOARD_SIZE = 8;
 	private Piece[][] representation;
-
-	// Pieces available to the Players
-	private ArrayList<Piece> red_pieces;
-	private ArrayList<Piece> black_pieces;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -29,14 +24,17 @@ public class Board {
 		movesSinceCapture = 0;
 		init();
 	}
-	
-	
+
+	public boolean isValidSquare(Location location) {
+		return 	0 <= location.row && location.row < BOARD_SIZE && 
+				0 <= location.column && location.column < BOARD_SIZE;
+	}
+
 	/**
 	 * Initialize the board putting checker pieces in their starting locations
 	 */
-	private void init()
-	{
-		for(int row = 0; row < 3; row++) {
+	private void init() {
+		for (int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++) {
 				Piece red_piece = new Piece(Color.RED, 2*col + (row % 2), row);
 				Piece black_piece = new Piece(Color.BLACK, 2*col + (BOARD_SIZE - 1 - row) %2, BOARD_SIZE - 1 - row);
@@ -47,60 +45,65 @@ public class Board {
 	}
 	
 	/**
+	 * Tests board equality.
+	 * @param other The other board.
+	 * @return true if the board's pieces are all equal to the other board's pieces.
+	 */
+	public boolean equals(Board other) {
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				if(!(this.representation[i][j]).equals(other.getRepresentation()[i][j])) 
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Print the current board representation
 	 */
-	public void print()
-	{
-		for(int row = 0; row < BOARD_SIZE; row++)
-		{
-			for (int col = 0; col < BOARD_SIZE; col++)
-			{
-				if (!isOccupied(row, col))
+	public void print() {
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				if (!isOccupied(new Location(row, col)))
 					System.out.print("| ");
-				else if (representation[row][col].getColor() == Color.RED)
-				{
+				else if (representation[row][col].getColor() == Color.RED) {
 					if (representation[row][col].getType() == Type.NORMAL)
 						System.out.print("|r");
 					else	
 						System.out.print("|R");
 				}
-				else
-				{
-					if(representation[row][col].getType() == Type.NORMAL)
+				else {
+					if (representation[row][col].getType() == Type.NORMAL)
 						System.out.print("|b");
 					else
 						System.out.print("|B");
 				}
-
 			}
 			System.out.println("|");
 		}
+	}
+	
+	
+	public boolean isValidJump(Move move) {
+		Piece monkey = representation[(move.destination.row + move.source.row)/2][(move.destination.column + move.source.column)/2];
+		Piece toMove = representation[move.source.row][move.source.column];
+		return isValidSquare(move.destination) && !isOccupied(move.destination)
+				&& monkey != null
+				&& monkey.getColor() == toMove.opposite();
 	}
 	
 	/**
 	 * return true if square contains a piece
 	 * return false otherwise
 	 */
-	public boolean isOccupied(int row, int col)
-	{
-		return representation[row][col] != null;
+	public boolean isOccupied(Location location) {
+		return representation[location.row][location.column] != null;
 	}
 
-	public ArrayList<Piece> getRedPieces() {
-		return red_pieces;
+	
+	public Piece[][] getRepresentation() {
+		return this.representation;
 	}
-
-	public void setRedPieces(ArrayList<Piece> red_pieces) {
-		this.red_pieces = red_pieces;
-	}
-
-	public ArrayList<Piece> getBlackPieces() {
-		return black_pieces;
-	}
-
-	public void setBlackPieces(ArrayList<Piece> black_pieces) {
-		this.black_pieces = black_pieces;
-	}
-
 }
 
