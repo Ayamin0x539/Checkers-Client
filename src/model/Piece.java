@@ -36,4 +36,10 @@ public class Piece {
 	public Color getColor() {
 		return this.color;
 	}
+	
+	public boolean equals(Piece other) {
+		return this.color == other.color &&
+				this.location.equals(other.getLocation()) &&
+				this.type == other.getType();
+	}
 }
