@@ -22,6 +22,7 @@ public class Board {
 	// Move properties
 	private int movesSinceCapture;
 	public enum Direction {UP, DOWN, LEFT, RIGHT};
+	
 
 	public Board() {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
@@ -29,14 +30,14 @@ public class Board {
 		init();
 	}
 	
+	
 	/**
 	 * Initialize the board putting checker pieces in their starting locations
 	 */
 	private void init()
 	{
-		for(int row = 0; row < 3; row++){
-			for (int col = 0; col < 4; col++)
-			{
+		for(int row = 0; row < 3; row++) {
+			for (int col = 0; col < 4; col++) {
 				Piece red_piece = new Piece(Color.RED, 2*col + (row % 2), row);
 				Piece black_piece = new Piece(Color.BLACK, 2*col + (BOARD_SIZE - 1 - row) %2, BOARD_SIZE - 1 - row);
 				representation[row][2*col+ (row % 2)] = red_piece;
