@@ -6,6 +6,12 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Represents the panel which will hold all of the graphical
+ * components of the game.
+ * @author john
+ *
+ */
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel {
 	private JLabel messageBar;

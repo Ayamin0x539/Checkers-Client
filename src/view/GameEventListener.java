@@ -9,6 +9,11 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JOptionPane;
 
+/**
+ * Represents an object which listens for any events which occur in the UI
+ * @author john
+ *
+ */
 public class GameEventListener implements MouseListener, KeyListener, ActionListener {
 
 	/**

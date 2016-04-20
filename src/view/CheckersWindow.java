@@ -7,6 +7,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+/**
+ * Represents the JFrame window that will hold the graphical components
+ * of the game.
+ * @author john
+ *
+ */
 @SuppressWarnings("serial")
 public class CheckersWindow extends JFrame {
 	/* Constants for the size of the window */

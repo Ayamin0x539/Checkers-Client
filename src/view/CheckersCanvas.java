@@ -9,6 +9,11 @@ import javax.swing.JPanel;
 
 import model.Location;
 
+/**
+ * Represents the canvas on which the checkers board is drawn.
+ * @author john
+ *
+ */
 @SuppressWarnings("serial")
 public class CheckersCanvas extends JPanel {
 
