@@ -63,6 +63,19 @@ public class Board {
 	}
 	
 	/**
+	 * Generates the frontier.
+	 * @param color The color of pieces to generate the frontier for.
+	 * @return A list of possible "next moves" in the form of boards.
+	 */
+	public ArrayList<Board> generateFrontier(Color color) {
+		ArrayList<Board> from_jumps = generateJumpFrontier(color);
+		if(from_jumps.isEmpty()) {
+			return generateMoveFrontier(color);
+		}
+		return from_jumps;
+	}
+	
+	/**
 	 * Print the current board representation
 	 */
 	public void print() {
