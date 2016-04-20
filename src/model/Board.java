@@ -27,6 +27,21 @@ public class Board {
 		movesSinceCapture = 0;
 		init();
 	}
+	
+	/**
+	 * Copy constructor.
+	 * @param other
+	 */
+	public Board(Board other) {
+		this.representation = new Piece[BOARD_SIZE][BOARD_SIZE];
+		Piece[][] other_representation = other.getRepresentation();
+		for (int i = 0; i < other_representation.length; ++i) {
+			for (int j = 0; j < other_representation[0].length; ++j) {
+				this.representation[i][j] = other_representation[i][j];
+			}
+		}
+		movesSinceCapture = other.getMovesSinceCapture();
+	}
 
 	public boolean isValidSquare(int row, int col) {
 		return 	0 <= row && row < BOARD_SIZE && 
@@ -60,6 +75,12 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	public ArrayList<Board> generateMoveFrontier(Color color) {
+		ArrayList<Board> frontier = new ArrayList<Board>();
+		
+		
 	}
 	
 	/**
@@ -126,6 +147,10 @@ public class Board {
 	
 	public Piece[][] getRepresentation() {
 		return this.representation;
+	}
+	
+	public int getMovesSinceCapture() {
+		return this.movesSinceCapture;
 	}
 }
 
