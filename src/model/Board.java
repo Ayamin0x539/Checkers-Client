@@ -89,28 +89,29 @@ public class Board {
 		up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
 		down = p.getColor() == Color.RED || p.getType() == Type.KING;
 		if (up) {
+			// up left
 			Move upLeft = new Move(p.getLocation(), new Location(row - 1, col - 1));
 			if (isValidMove(upLeft)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col - 1)));
+				avail_moves.add(upLeft);
 			}
 			
 			// up right	
 			Move upRight = new Move(p.getLocation(), new Location(row - 1, col + 1));
 			if (isValidMove(upRight)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col + 1)));
+				avail_moves.add(upRight);
 			}
 		}
 		if (down) {
 			// down left
 			Move downLeft = new Move(p.getLocation(), new Location(row + 1, col - 1));
 			if (isValidMove(downLeft)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col - 1)));
+				avail_moves.add(downLeft);
 			}
 			
 			// down right
 			Move downRight = new Move(p.getLocation(), new Location(row + 1, col + 1));
 			if (isValidMove(downRight)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col + 1)));
+				avail_moves.add(downRight);
 			}
 		}
 		return avail_moves;
