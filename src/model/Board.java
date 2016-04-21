@@ -5,7 +5,8 @@ import java.util.ArrayList;
 /**
  * The representation is a 8x8 grid where
  * A[row][col] marks the position of the checker piece.
- * Smoke starts at lower row and fire starts at higher row.
+ * Smoke starts at the "bottom" and Fire starts at the "top".
+ * The top-left-most square is row = 0, column = 0.
  * @author Ayamin
  *
  */
@@ -37,7 +38,7 @@ public class Board {
 		Piece[][] other_representation = other.getRepresentation();
 		for (int i = 0; i < other_representation.length; ++i) {
 			for (int j = 0; j < other_representation[0].length; ++j) {
-				this.representation[i][j] = other_representation[i][j];
+				this.representation[i][j] = new Piece(other_representation[i][j]);
 			}
 		}
 		movesSinceCapture = other.getMovesSinceCapture();
@@ -77,10 +78,86 @@ public class Board {
 		return true;
 	}
 	
+	/**
+	 * Generates the frontier for a particular piece.
+	 * @param p
+	 * @return
+	 */
+	public ArrayList<Board> generateMoveFrontierForPiece(Piece p) {
+		ArrayList<Board> frontier = new ArrayList<Board>();
+		int row = p.getLocation().row;
+		int col = p.getLocation().column;
+		boolean up, down;
+		up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
+		down = p.getColor() == Color.RED || p.getType() == Type.KING;
+		if (up) {
+			// up left:
+			if (isValidSquare(row - 1, col - 1)) {
+				if (null == this.representation[row - 1][col - 1]) {
+					Board upleft = new Board(this);
+					Piece[][] rep = upleft.getRepresentation();
+					rep[row - 1][col - 1] = rep[row][col];
+					rep[row][col] = null;
+					rep[row - 1][col - 1].setLocation(new Location(row - 1, col - 1));
+					frontier.add(upleft);
+				}
+			}
+			// up right	
+			if (isValidSquare(row - 1, col + 1)) {
+				if (null == this.representation[row - 1][col + 1]) {
+					Board upright = new Board(this);
+					Piece[][] rep = upright.getRepresentation();
+					rep[row - 1][col + 1] = rep[row][col];
+					rep[row][col] = null;
+					rep[row - 1][col + 1].setLocation(new Location(row - 1, col + 1));
+					frontier.add(upright);
+				}
+			}
+		}
+		if (down) {
+			// down left
+			if (isValidSquare(row + 1, col - 1)) {
+				if (null == this.representation[row + 1][col - 1]) {
+					Board downleft = new Board(this);
+					Piece[][] rep = downleft.getRepresentation();
+					rep[row + 1][col - 1] = rep[row][col];
+					rep[row][col] = null;
+					rep[row + 1][col - 1].setLocation(new Location(row + 1, col - 1));
+					frontier.add(downleft);
+				}
+			}
+			// down right
+			if (isValidSquare(row + 1, col + 1)) {
+				if (null == this.representation[row + 1][col + 1]) {
+					Board downright = new Board(this);
+					Piece[][] rep = downright.getRepresentation();
+					rep[row + 1][col + 1] = rep[row][col];
+					rep[row][col] = null;
+					rep[row + 1][col + 1].setLocation(new Location(row + 1, col + 1));
+					frontier.add(downright);
+				}
+			}
+		}
+		return frontier;
+	}
+	
+	/**
+	 * Generates the frontier for movement for all pieces.
+	 * @param color
+	 * @return
+	 */
 	public ArrayList<Board> generateMoveFrontier(Color color) {
 		ArrayList<Board> frontier = new ArrayList<Board>();
-		
-		
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if(null != p && p.getColor() == color) {
+					ArrayList<Board> sub_frontier = generateMoveFrontierForPiece(this.representation[i][j]);
+					frontier.addAll(sub_frontier);
+				}
+			}
+		}
+		return frontier;
 	}
 	
 	/**

@@ -11,6 +11,12 @@ public class Piece {
 		this.type = Type.NORMAL;
 	}
 	
+	public Piece(Piece other) {
+		this.color = other.getColor();
+		this.location = new Location(other.getLocation());
+		this.type = other.getType();
+	}
+	
 	public void setLocation(Location location) {
 		this.location = location;
 	}
