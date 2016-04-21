@@ -148,6 +148,57 @@ public class Board {
 	}
 	
 	/**
+	 * Move the jumper and erase the jumpee.
+	 * @param jump
+	 */
+	public void jump(Move jump) {
+		representation
+			[(jump.destination.row + jump.source.row)/2]
+			[(jump.destination.column + jump.source.column)/2] = null; // monkey
+		representation[jump.destination.row][jump.destination.column] =
+				representation[jump.source.row][jump.source.column];
+		representation[jump.source.row][jump.source.column] = null;
+	}
+
+	/**
+	 * Returns the possible jumps a piece can take.
+	 * @param color
+	 * @return
+	 */
+	public ArrayList<Move> generateJumpMoves(Piece p) {
+		ArrayList<Move> jumps = new ArrayList<Move>();
+		int row = p.getLocation().row, 
+				col = p.getLocation().column;
+		boolean up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
+		boolean down = p.getColor() == Color.RED || p.getType() == Type.KING;
+		if (up) {
+			// Up left
+			Move upleft = new Move(new Location(row, col), new Location(row - 2, col - 2));
+			if (isValidJump(upleft)) {
+				jumps.add(upleft);
+			}
+			// Up right
+			Move upright = new Move(new Location(row, col), new Location(row - 2, col + 2));
+			if (isValidJump(upright)) {
+				jumps.add(upright);
+			}
+		}
+		if (down) {
+			// Down left
+			Move downleft = new Move(new Location(row, col), new Location(row + 2, col - 2));
+			if (isValidJump(downleft)) {
+				jumps.add(downleft);
+			}
+			// Down right
+			Move downright = new Move(new Location(row, col), new Location(row + 2, col + 2));
+			if (isValidJump(downright)) {
+				jumps.add(downright);
+			}
+		}
+		return jumps;
+	}
+	
+	/**
 	 * Generates the frontier.
 	 * @param color The color of pieces to generate the frontier for.
 	 * @return A list of possible "next moves" in the form of boards.
@@ -185,7 +236,11 @@ public class Board {
 		}
 	}
 	
-	
+	/**
+	 * Determines whether a move is a valid jump.
+	 * @param move
+	 * @return
+	 */
 	public boolean isValidJump(Move move) {
 		Piece monkey = representation[(move.destination.row + move.source.row)/2][(move.destination.column + move.source.column)/2];
 		Piece toMove = representation[move.source.row][move.source.column];
