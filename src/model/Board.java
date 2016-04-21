@@ -81,62 +81,39 @@ public class Board {
 	 * @param p
 	 * @return
 	 */
-	public ArrayList<Board> generateMoveFrontierForPiece(Piece p) {
-		ArrayList<Board> frontier = new ArrayList<Board>();
+	public ArrayList<Move> generateMoves(Piece p) {
+		ArrayList<Move> avail_moves = new ArrayList<Move>();
 		int row = p.getLocation().row;
 		int col = p.getLocation().column;
 		boolean up, down;
 		up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
 		down = p.getColor() == Color.RED || p.getType() == Type.KING;
 		if (up) {
-			// up left:
-			if (isValidSquare(row - 1, col - 1)) {
-				if (null == this.representation[row - 1][col - 1]) {
-					Board upleft = new Board(this);
-					Piece[][] rep = upleft.getRepresentation();
-					rep[row - 1][col - 1] = rep[row][col];
-					rep[row][col] = null;
-					rep[row - 1][col - 1].setLocation(new Location(row - 1, col - 1));
-					frontier.add(upleft);
-				}
+			Move upLeft = new Move(p.getLocation(), new Location(row - 1, col - 1));
+			if (isValidMove(upLeft)) {
+				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col - 1)));
 			}
+			
 			// up right	
-			if (isValidSquare(row - 1, col + 1)) {
-				if (null == this.representation[row - 1][col + 1]) {
-					Board upright = new Board(this);
-					Piece[][] rep = upright.getRepresentation();
-					rep[row - 1][col + 1] = rep[row][col];
-					rep[row][col] = null;
-					rep[row - 1][col + 1].setLocation(new Location(row - 1, col + 1));
-					frontier.add(upright);
-				}
+			Move upRight = new Move(p.getLocation(), new Location(row - 1, col + 1));
+			if (isValidMove(upRight)) {
+				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col + 1)));
 			}
 		}
 		if (down) {
 			// down left
-			if (isValidSquare(row + 1, col - 1)) {
-				if (null == this.representation[row + 1][col - 1]) {
-					Board downleft = new Board(this);
-					Piece[][] rep = downleft.getRepresentation();
-					rep[row + 1][col - 1] = rep[row][col];
-					rep[row][col] = null;
-					rep[row + 1][col - 1].setLocation(new Location(row + 1, col - 1));
-					frontier.add(downleft);
-				}
+			Move downLeft = new Move(p.getLocation(), new Location(row + 1, col - 1));
+			if (isValidMove(downLeft)) {
+				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col - 1)));
 			}
+			
 			// down right
-			if (isValidSquare(row + 1, col + 1)) {
-				if (null == this.representation[row + 1][col + 1]) {
-					Board downright = new Board(this);
-					Piece[][] rep = downright.getRepresentation();
-					rep[row + 1][col + 1] = rep[row][col];
-					rep[row][col] = null;
-					rep[row + 1][col + 1].setLocation(new Location(row + 1, col + 1));
-					frontier.add(downright);
-				}
+			Move downRight = new Move(p.getLocation(), new Location(row + 1, col + 1));
+			if (isValidMove(downRight)) {
+				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col + 1)));
 			}
 		}
-		return frontier;
+		return avail_moves;
 	}
 	
 	/**
@@ -150,12 +127,24 @@ public class Board {
 			for (int j = 0; j < BOARD_SIZE; ++j) {
 				Piece p = this.representation[i][j];
 				if(null != p && p.getColor() == color) {
-					ArrayList<Board> sub_frontier = generateMoveFrontierForPiece(this.representation[i][j]);
-					frontier.addAll(sub_frontier);
+					ArrayList<Move> jump_moves = generateMoves(this.representation[i][j]);
+					for (Move move : jump_moves) {
+						Board board = new Board(this);
+						board.move(move);
+						frontier.add(board);
+					}
 				}
 			}
 		}
 		return frontier;
+	}
+	
+	public void move(Move move) {
+		representation[move.destination.row][move.destination.column]
+				= representation[move.source.row][move.source.column];
+		representation[move.source.row][move.source.column] = null;
+		representation[move.destination.row][move.destination.column]
+				.setLocation(new Location(move.destination.row, move.destination.column));
 	}
 	
 	/**
@@ -203,6 +192,10 @@ public class Board {
 		return isValidSquare(move.destination) && !isOccupied(move.destination)
 				&& monkey != null
 				&& monkey.getColor() == toMove.opposite();
+	}
+	
+	public boolean isValidMove(Move move) {
+		return isValidSquare(move.destination) && !isOccupied(move.destination);
 	}
 	
 	/**
