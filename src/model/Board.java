@@ -15,18 +15,16 @@ public class Board {
 	private final int BOARD_SIZE = 8;
 	private Piece[][] representation;
 
-	// Pieces available to the Players
-	private ArrayList<Piece> red_pieces;
-	private ArrayList<Piece> black_pieces;
-
 	// Move properties
 	private int movesSinceCapture;
 	public enum Direction {UP, DOWN, LEFT, RIGHT};
+	
 
 	public Board() {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
 		movesSinceCapture = 0;
 		init();
+
 	}
 	
 	/**
@@ -44,9 +42,9 @@ public class Board {
 		movesSinceCapture = other.getMovesSinceCapture();
 	}
 
-	public boolean isValidSquare(int row, int col) {
-		return 	0 <= row && row < BOARD_SIZE && 
-				0 <= col && col < BOARD_SIZE;
+	public boolean isValidSquare(Location location) {
+		return 	0 <= location.row && location.row < BOARD_SIZE && 
+				0 <= location.column && location.column < BOARD_SIZE;
 	}
 
 	/**
@@ -179,7 +177,7 @@ public class Board {
 	public void print() {
 		for (int row = 0; row < BOARD_SIZE; row++) {
 			for (int col = 0; col < BOARD_SIZE; col++) {
-				if (!isOccupied(row, col))
+				if (!isOccupied(new Location(row, col)))
 					System.out.print("| ");
 				else if (representation[row][col].getColor() == Color.RED) {
 					if (representation[row][col].getType() == Type.NORMAL)
@@ -198,29 +196,23 @@ public class Board {
 		}
 	}
 	
+	
+	public boolean isValidJump(Move move) {
+		Piece monkey = representation[(move.destination.row + move.source.row)/2][(move.destination.column + move.source.column)/2];
+		Piece toMove = representation[move.source.row][move.source.column];
+		return isValidSquare(move.destination) && !isOccupied(move.destination)
+				&& monkey != null
+				&& monkey.getColor() == toMove.opposite();
+	}
+	
 	/**
 	 * return true if square contains a piece
 	 * return false otherwise
 	 */
-	public boolean isOccupied(int row, int col) {
-		return representation[row][col] != null;
+	public boolean isOccupied(Location location) {
+		return representation[location.row][location.column] != null;
 	}
 
-	public ArrayList<Piece> getRedPieces() {
-		return red_pieces;
-	}
-
-	public void setRedPieces(ArrayList<Piece> red_pieces) {
-		this.red_pieces = red_pieces;
-	}
-
-	public ArrayList<Piece> getBlackPieces() {
-		return black_pieces;
-	}
-
-	public void setBlackPieces(ArrayList<Piece> black_pieces) {
-		this.black_pieces = black_pieces;
-	}
 	
 	public Piece[][] getRepresentation() {
 		return this.representation;
