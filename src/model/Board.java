@@ -77,7 +77,7 @@ public class Board {
 	}
 	
 	/**
-	 * Generates the frontier for a particular piece.
+	 * Generates the Move set for a particular piece.
 	 * @param p
 	 * @return
 	 */
@@ -196,6 +196,24 @@ public class Board {
 			}
 		}
 		return jumps;
+	}
+	
+	public ArrayList<Board> generateJumpFrontier(Color color) {
+		ArrayList<Board> frontier = new ArrayList<Board>();
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if (null != p && p.getColor() == color) {
+					ArrayList<Move> jump_moves = generateMoves(this.representation[i][j]);
+					for (Move jump : jump_moves) {
+						Board board = new Board(this);
+						board.move(jump);
+						frontier.add(board);
+					}
+				}
+			}
+		}
+		return frontier;		
 	}
 	
 	/**
