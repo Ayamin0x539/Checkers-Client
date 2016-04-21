@@ -128,8 +128,8 @@ public class Board {
 			for (int j = 0; j < BOARD_SIZE; ++j) {
 				Piece p = this.representation[i][j];
 				if(null != p && p.getColor() == color) {
-					ArrayList<Move> jump_moves = generateMoves(this.representation[i][j]);
-					for (Move move : jump_moves) {
+					ArrayList<Move> moves = generateMoves(this.representation[i][j]);
+					for (Move move : moves) {
 						Board board = new Board(this);
 						board.move(move);
 						frontier.add(board);
