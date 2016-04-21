@@ -89,28 +89,29 @@ public class Board {
 		up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
 		down = p.getColor() == Color.RED || p.getType() == Type.KING;
 		if (up) {
+			// up left
 			Move upLeft = new Move(p.getLocation(), new Location(row - 1, col - 1));
 			if (isValidMove(upLeft)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col - 1)));
+				avail_moves.add(upLeft);
 			}
 			
 			// up right	
 			Move upRight = new Move(p.getLocation(), new Location(row - 1, col + 1));
 			if (isValidMove(upRight)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row - 1, col + 1)));
+				avail_moves.add(upRight);
 			}
 		}
 		if (down) {
 			// down left
 			Move downLeft = new Move(p.getLocation(), new Location(row + 1, col - 1));
 			if (isValidMove(downLeft)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col - 1)));
+				avail_moves.add(downLeft);
 			}
 			
 			// down right
 			Move downRight = new Move(p.getLocation(), new Location(row + 1, col + 1));
 			if (isValidMove(downRight)) {
-				avail_moves.add(new Move(p.getLocation(), new Location(row + 1, col + 1)));
+				avail_moves.add(downRight);
 			}
 		}
 		return avail_moves;
@@ -127,8 +128,8 @@ public class Board {
 			for (int j = 0; j < BOARD_SIZE; ++j) {
 				Piece p = this.representation[i][j];
 				if(null != p && p.getColor() == color) {
-					ArrayList<Move> jump_moves = generateMoves(this.representation[i][j]);
-					for (Move move : jump_moves) {
+					ArrayList<Move> moves = generateMoves(this.representation[i][j]);
+					for (Move move : moves) {
 						Board board = new Board(this);
 						board.move(move);
 						frontier.add(board);
