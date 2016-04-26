@@ -3,6 +3,8 @@ package test;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import controller.Game;
+import model.Color;
 import view.CheckersWindow;
 
 public class GUITest {
@@ -27,7 +29,7 @@ public class GUITest {
 		catch (IllegalAccessException e) {
 			// handle exception
 		}
-		CheckersWindow window = new CheckersWindow();
+		CheckersWindow window = new CheckersWindow(new Game(Color.RED));
 		window.open();
 	}
 }

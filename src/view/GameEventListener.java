@@ -34,9 +34,12 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	public void mousePressed(MouseEvent e) {
 		Square square = (Square) e.getComponent();
 		if(square.hasPiece()) {
+			gamePanel.dehighlightAllSquares();
 			gamePanel.setMoveSource(square);
+			if (square.isSelected())
+				gamePanel.highlightValidDestinations(square.getCellLocation());
 			gamePanel.updateMoveMessage();
-		} else {
+		} else if (square.isValid()) {
 			gamePanel.setMoveDestination(square);
 			gamePanel.updateMoveMessage();
 		}
@@ -52,8 +55,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER && gamePanel.moveReady()) {
-			System.out.println("Moving piece.");
-			// TODO: Request a move from the controller.
+			gamePanel.moveSelectedPiece();
 		}
 
 	}

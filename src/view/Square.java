@@ -18,18 +18,20 @@ public class Square extends JPanel implements MouseListener {
 	 * The {@link Location} (row, col) of the square on the board.
 	 */
 	private final Location location;
-	
+
 	/** 
 	 * The {@link Checker} object contained in this square. Null if there is none.
 	 */
 	private Checker piece;
-	
+
 	/**
 	 * A boolean value representing whether the square is selected for movement.
 	 */
 	private boolean selected;
-	
-	
+
+	private boolean valid;
+
+
 	/**
 	 * Constructs a graphical square with the given color and location.
 	 * @param color		A {@link Color} object representing the square's color.
@@ -41,7 +43,7 @@ public class Square extends JPanel implements MouseListener {
 		this.selected = false;
 		initSquare(color);
 	}
-	
+
 
 	/**
 	 * Initializes the properties of the square such as color and layout.
@@ -73,11 +75,13 @@ public class Square extends JPanel implements MouseListener {
 	 */
 	public void setPiece(Checker piece) {
 		this.piece = piece;
-		this.add(piece);
-		piece.addMouseListener(this);
-		this.validate();
+		if (piece != null) {
+			this.add(piece);
+			piece.addMouseListener(this);
+			this.validate();
+		}
 	}
-	
+
 	/**
 	 * {@link Square#selected}
 	 */
@@ -92,13 +96,23 @@ public class Square extends JPanel implements MouseListener {
 	 */
 	public void setSelected(boolean val) {
 		if (val) {
-			this.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+			this.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+		} else if (valid){
+			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 		} else {
 			this.setBorder(null);
 		}
 		this.selected = val;
 	}
-	
+
+	public void setValid(boolean state) {
+		this.valid = state;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
 	/**
 	 * Check's if the square contains a {@link Checker} object or not.
 	 * @return	<code>true</code> if the square contains a checker. <br />
@@ -107,7 +121,7 @@ public class Square extends JPanel implements MouseListener {
 	public boolean hasPiece() {
 		return this.piece != null;
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		/* Send the event to the lister of the square (GameEventListener) */
@@ -127,6 +141,18 @@ public class Square extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
+
+
+	public void highlight() {
+		this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+
+	}
+
+
+	public void dehighlight() {
+		this.setBorder(null);
+
+	}
 
 
 }

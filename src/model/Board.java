@@ -53,8 +53,8 @@ public class Board {
 	private void init() {
 		for (int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++) {
-				Piece red_piece = new Piece(Color.RED, 2*col + (row % 2), row);
-				Piece black_piece = new Piece(Color.BLACK, 2*col + (BOARD_SIZE - 1 - row) %2, BOARD_SIZE - 1 - row);
+				Piece red_piece = new Piece(Color.RED, row, 2*col + (row % 2));
+				Piece black_piece = new Piece(Color.BLACK, BOARD_SIZE - 1 - row, 2*col + (BOARD_SIZE - 1 - row) %2);
 				representation[row][2*col+ (row % 2)] = red_piece;
 				representation[BOARD_SIZE - 1 - row][2*col + (BOARD_SIZE - 1 - row) %2] = black_piece;
 			}
@@ -261,13 +261,18 @@ public class Board {
 	 * @return
 	 */
 	public boolean isValidJump(Move move) {
-		Piece monkey = representation[(move.destination.row + move.source.row)/2][(move.destination.column + move.source.column)/2];
-		Piece toMove = representation[move.source.row][move.source.column];
-		return isValidSquare(move.destination) && !isOccupied(move.destination)
-				&& monkey != null
-				&& monkey.getColor() == toMove.opposite();
+		if (isValidSquare(move.destination)) {
+			Piece monkey = representation[(move.destination.row + move.source.row)/2][(move.destination.column + move.source.column)/2];
+			Piece toMove = representation[move.source.row][move.source.column];
+			return !isOccupied(move.destination)
+					&& monkey != null
+					&& monkey.getColor() == toMove.opposite();
+
+		} else {
+			return false;
+		}
 	}
-	
+
 	public boolean isValidMove(Move move) {
 		return isValidSquare(move.destination) && !isOccupied(move.destination);
 	}
@@ -278,6 +283,10 @@ public class Board {
 	 */
 	public boolean isOccupied(Location location) {
 		return representation[location.row][location.column] != null;
+	}
+	
+	public Piece getPiece(Location location) {
+		return representation[location.row][location.column];
 	}
 
 	

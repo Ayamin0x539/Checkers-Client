@@ -2,9 +2,14 @@ package view;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import controller.Game;
+import model.Location;
+import model.Move;
 
 /**
  * Represents the panel which will hold all of the graphical
@@ -14,6 +19,9 @@ import javax.swing.JPanel;
  */
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel {
+	
+	private Game game;
+	
 	private JLabel messageBar;
 	private CheckersCanvas canvas;
 	private GridBagConstraints layoutConstraints;
@@ -21,8 +29,10 @@ public class GamePanel extends JPanel {
 	private Square moveDestination;
 	private Square moveSource;
 
-	public GamePanel(GameEventListener gameListener) {
+	public GamePanel(Game game, GameEventListener gameListener) {
 		super(new GridBagLayout());
+		
+		this.game = game;
 		
 		/* Initialize the layout manager */
 		this.layoutConstraints = new GridBagConstraints();
@@ -92,6 +102,28 @@ public class GamePanel extends JPanel {
 
 	public boolean moveReady() {
 		return moveSource != null && moveDestination != null;
+	}
+
+	public void highlightValidDestinations(Location source) {
+		ArrayList<Move> availMoves = game.getAvailableMoves(source);
+		
+		for (Move move : availMoves) {
+			canvas.highlightAndValidateSquare(move.destination);
+		}
+	}
+	
+	public void dehighlightAllSquares() {
+		canvas.invalidateAllSquares();
+	}
+	
+	public void moveSelectedPiece() {
+		game.movePiece(new Move(moveSource.getCellLocation(), moveDestination.getCellLocation()));
+		canvas.moveChecker(moveSource.getCellLocation(), moveDestination.getCellLocation());
+		dehighlightAllSquares();
+		moveSource.setSelected(false);
+		moveDestination.setSelected(false);
+		moveSource = null;
+		moveDestination = null;
 	}
 
 }
