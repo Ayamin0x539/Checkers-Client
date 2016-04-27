@@ -205,7 +205,7 @@ public class Board {
 			for (int j = 0; j < BOARD_SIZE; ++j) {
 				Piece p = this.representation[i][j];
 				if (null != p && p.getColor() == color) {
-					ArrayList<Move> jump_moves = generateMoves(this.representation[i][j]);
+					ArrayList<Move> jump_moves = generateJumpMoves(this.representation[i][j]);
 					for (Move jump : jump_moves) {
 						Board board = new Board(this);
 						board.move(jump);
