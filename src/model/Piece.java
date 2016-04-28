@@ -22,8 +22,8 @@ public class Piece {
 	}
 	
 	public Color opposite() {
-		if(this.color.equals(Color.RED)) return Color.BLACK;
-		if(this.color.equals(Color.BLACK)) return Color.RED;
+		if(this.color.equals(Color.WHITE)) return Color.BLACK;
+		if(this.color.equals(Color.BLACK)) return Color.WHITE;
 		return null;
 	}
 	

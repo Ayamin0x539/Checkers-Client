@@ -29,7 +29,7 @@ public class GUITest {
 		catch (IllegalAccessException e) {
 			// handle exception
 		}
-		CheckersWindow window = new CheckersWindow(new Game(Color.RED));
+		CheckersWindow window = new CheckersWindow(new Game(Color.WHITE));
 		window.open();
 	}
 }

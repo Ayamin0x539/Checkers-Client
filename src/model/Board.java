@@ -53,10 +53,10 @@ public class Board {
 	private void init() {
 		for (int row = 0; row < 3; row++){
 			for (int col = 0; col < 4; col++) {
-				Piece red_piece = new Piece(Color.RED, row, 2*col + (row % 2));
-				Piece black_piece = new Piece(Color.BLACK, BOARD_SIZE - 1 - row, 2*col + (BOARD_SIZE - 1 - row) %2);
-				representation[row][2*col+ (row % 2)] = red_piece;
-				representation[BOARD_SIZE - 1 - row][2*col + (BOARD_SIZE - 1 - row) %2] = black_piece;
+				Piece white_piece = new Piece(Color.WHITE, BOARD_SIZE - row - 1, 2*col + (row % 2));
+				Piece black_piece = new Piece(Color.BLACK, row, 2*col + (BOARD_SIZE - 1 - row) %2);
+				representation[BOARD_SIZE - row - 1][2*col+ (row % 2)] = white_piece;
+				representation[row][2*col + (BOARD_SIZE - 1 - row) %2] = black_piece;
 			}
 		}
 	}
@@ -86,8 +86,8 @@ public class Board {
 		int row = p.getLocation().row;
 		int col = p.getLocation().column;
 		boolean up, down;
-		up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
-		down = p.getColor() == Color.RED || p.getType() == Type.KING;
+		up = p.getColor() == Color.WHITE || p.getType() == Type.KING;
+		down = p.getColor() == Color.BLACK || p.getType() == Type.KING;
 		if (up) {
 			// up left
 			Move upLeft = new Move(p.getLocation(), new Location(row - 1, col - 1));
@@ -170,8 +170,8 @@ public class Board {
 		ArrayList<Move> jumps = new ArrayList<Move>();
 		int row = p.getLocation().row, 
 				col = p.getLocation().column;
-		boolean up = p.getColor() == Color.BLACK || p.getType() == Type.KING;
-		boolean down = p.getColor() == Color.RED || p.getType() == Type.KING;
+		boolean up = p.getColor() == Color.WHITE || p.getType() == Type.KING;
+		boolean down = p.getColor() == Color.BLACK || p.getType() == Type.KING;
 		if (up) {
 			// Up left
 			Move upleft = new Move(new Location(row, col), new Location(row - 2, col - 2));
@@ -238,17 +238,17 @@ public class Board {
 			for (int col = 0; col < BOARD_SIZE; col++) {
 				if (!isOccupied(new Location(row, col)))
 					System.out.print("| ");
-				else if (representation[row][col].getColor() == Color.RED) {
+				else if (representation[row][col].getColor() == Color.BLACK) {
 					if (representation[row][col].getType() == Type.NORMAL)
-						System.out.print("|r");
+						System.out.print("|b");
 					else	
-						System.out.print("|R");
+						System.out.print("|B");
 				}
 				else {
 					if (representation[row][col].getType() == Type.NORMAL)
-						System.out.print("|b");
+						System.out.print("|w");
 					else
-						System.out.print("|B");
+						System.out.print("|W");
 				}
 			}
 			System.out.println("|");

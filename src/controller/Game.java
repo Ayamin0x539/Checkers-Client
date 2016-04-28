@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 import model.Board;
@@ -18,8 +19,9 @@ public class Game {
 	public ArrayList<Move> getAvailableMoves(Location source) {
 		ArrayList<Move> moves = board.generateMoves(board.getPiece(source));
 		ArrayList<Move> jumps = board.generateJumpMoves(board.getPiece(source));
-		
 		ArrayList<Move> allMoves = new ArrayList<Move>(moves);
+		if (allMoves.isEmpty())
+			System.out.println("No available moves");
 		allMoves.addAll(jumps);
 		return allMoves;
 	}
