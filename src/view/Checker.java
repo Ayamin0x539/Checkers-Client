@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 /**
@@ -12,9 +13,9 @@ import javax.swing.*;
 public class Checker extends JPanel {
 
 	/* The color of the checker */
-	private Color color;
+	public final model.Color color;
 	
-	public Checker(Color color) {
+	public Checker(model.Color color) {
 		super();
 		this.color = color;
 		initChecker();
@@ -50,7 +51,12 @@ public class Checker extends JPanel {
 		
 		/* Set the graphics object's color to the checker's color
 		 * and paint an oval which represents the checker. */
-		g2.setColor(color);
+		if (this.color == model.Color.WHITE) {
+			g2.setColor(new Color(0xB1B2B3));
+		}
+		if (this.color == model.Color.BLACK) {
+			g2.setColor(new Color(89, 89, 89));
+		}
 		g2.fillOval(5, 5, getSize().width-10,getSize().height-10);
 		
 		/* Make a call to the super classes painComponent method */

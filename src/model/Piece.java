@@ -48,4 +48,9 @@ public class Piece {
 				this.location.equals(other.getLocation()) &&
 				this.type == other.getType();
 	}
+	
+	@Override
+	public String toString() {
+		return "Piece(" + this.color + ", " + this.location + ", " + this.type + ")";
+	}
 }

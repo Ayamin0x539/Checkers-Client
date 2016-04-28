@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Game;
+import model.Color;
 import model.Location;
 import model.Move;
 
@@ -28,6 +29,7 @@ public class GamePanel extends JPanel {
 
 	private Square moveDestination;
 	private Square moveSource;
+
 
 	public GamePanel(Game game, GameEventListener gameListener) {
 		super(new GridBagLayout());
@@ -116,14 +118,37 @@ public class GamePanel extends JPanel {
 		canvas.invalidateAllSquares();
 	}
 	
+	
 	public void moveSelectedPiece() {
-		game.movePiece(new Move(moveSource.getCellLocation(), moveDestination.getCellLocation()));
+		Move theMove = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
+		game.movePiece(theMove);
 		canvas.moveChecker(moveSource.getCellLocation(), moveDestination.getCellLocation());
 		dehighlightAllSquares();
 		moveSource.setSelected(false);
 		moveDestination.setSelected(false);
 		moveSource = null;
 		moveDestination = null;
+		if(!theMove.isJump()) {
+			game.switchTurn();
+		} else {
+			Location monkeyLoc = new Location((theMove.destination.row 
+					+ theMove.source.row)/2, 
+					(theMove.source.column 
+							+ theMove.destination.column) / 2);
+			System.out.println(monkeyLoc);
+			removePiece(monkeyLoc);
+		}
 	}
-
+	
+	public void removePiece(Location location ) {
+		canvas.removeChecker(location);
+	}
+	
+	public void moveArbitraryPiece(Move move) {
+		canvas.moveChecker(move.source, move.destination);
+	}
+	
+	public boolean isTurn(Color color) {
+		return color == game.getCurrentTurn();
+	}
 }

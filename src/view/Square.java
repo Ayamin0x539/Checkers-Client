@@ -78,9 +78,16 @@ public class Square extends JPanel implements MouseListener {
 		if (piece != null) {
 			this.add(piece);
 			piece.addMouseListener(this);
-			this.validate();
-		}
+		} 
+		this.validate();
+		this.repaint();
 	}
+	
+	public void removePiece() {
+
+		this.remove(this.piece);
+	}
+	
 
 	/**
 	 * {@link Square#selected}

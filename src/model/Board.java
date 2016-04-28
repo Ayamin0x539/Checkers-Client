@@ -14,6 +14,8 @@ public class Board {
 	// Board properties and representation
 	private final int BOARD_SIZE = 8;
 	private Piece[][] representation;
+	
+	private Piece lastPieceMoved;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -24,7 +26,7 @@ public class Board {
 		representation = new Piece[BOARD_SIZE][BOARD_SIZE];
 		movesSinceCapture = 0;
 		init();
-
+		lastPieceMoved = null;
 	}
 	
 	/**
@@ -40,6 +42,7 @@ public class Board {
 			}
 		}
 		movesSinceCapture = other.getMovesSinceCapture();
+		lastPieceMoved = other.getLastPieceMoved();
 	}
 
 	public boolean isValidSquare(Location location) {
@@ -146,6 +149,8 @@ public class Board {
 		representation[move.source.row][move.source.column] = null;
 		representation[move.destination.row][move.destination.column]
 				.setLocation(new Location(move.destination.row, move.destination.column));
+		Piece moved = representation[move.destination.row][move.destination.column];
+		this.lastPieceMoved = moved;
 	}
 	
 	/**
@@ -159,6 +164,11 @@ public class Board {
 		representation[jump.destination.row][jump.destination.column] =
 				representation[jump.source.row][jump.source.column];
 		representation[jump.source.row][jump.source.column] = null;
+		representation[jump.destination.row][jump.destination.column]
+				.setLocation(new Location(jump.destination.row, jump.destination.column));
+
+		Piece moved = representation[jump.destination.row][jump.destination.column];
+		this.lastPieceMoved = moved;
 	}
 
 	/**
@@ -230,6 +240,42 @@ public class Board {
 		return from_jumps;
 	}
 	
+	public ArrayList<Move> generateJumpMoveFrontier(Color color) {
+		ArrayList<Move> frontier = new ArrayList<Move>();
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if (null != p && p.getColor() == color) {
+					ArrayList<Move> jump_moves = generateJumpMoves(this.representation[i][j]);
+					frontier.addAll(jump_moves);
+				}
+			}
+		}
+		return frontier;		
+	}
+	
+	public ArrayList<Move> generateMoveMoveFrontier(Color color) {
+		ArrayList<Move> frontier = new ArrayList<Move>();
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if(null != p && p.getColor() == color) {
+					ArrayList<Move> moves = generateMoves(this.representation[i][j]);
+					frontier.addAll(moves);
+				}
+			}
+		}
+		return frontier;
+	}
+	
+	public ArrayList<Move> generateAllPossibleMoves(Color color) {
+		ArrayList<Move> from_jumps = generateJumpMoveFrontier(color);
+		if (from_jumps.isEmpty()) {
+			return generateMoveMoveFrontier(color);
+		}
+		return from_jumps;
+	}
+	
 	/**
 	 * Print the current board representation
 	 */
@@ -296,6 +342,10 @@ public class Board {
 	
 	public int getMovesSinceCapture() {
 		return this.movesSinceCapture;
+	}
+	
+	public Piece getLastPieceMoved() {
+		return this.lastPieceMoved;
 	}
 }
 

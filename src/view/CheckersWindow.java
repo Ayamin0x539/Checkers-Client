@@ -100,6 +100,7 @@ public class CheckersWindow extends JFrame {
 	 */
 	private void initGamePanel(Game game) {
 		this.gamePanel = new GamePanel(game, gameListener);
+		game.setGamePanel(this.gamePanel);
 		this.getContentPane().add(this.gamePanel);
 		this.gameListener.setGamePanel(gamePanel);
 	}

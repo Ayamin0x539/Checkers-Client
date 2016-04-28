@@ -9,5 +9,15 @@ public class Move {
 		this.destination = destination;
 	}
 
+	public boolean isJump() {
+		return Math.abs(source.column - destination.column) == 2
+				&& Math.abs(source.row - destination.row) == 2;
+	}
+	
+	@Override
+	public String toString() {
+		return "From (" + this.source.row + ", " + this.source.column + ")" +
+				" to (" + this.destination.row + ", " + this.destination.column + ")";
+	}
 
 }

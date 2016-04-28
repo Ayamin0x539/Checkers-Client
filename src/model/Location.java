@@ -22,4 +22,9 @@ public class Location {
 	public boolean equals(Location other) {
 		return this.row == other.row && this.column == other.column;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + this.row + ", " + this.column + ")";
+	}
 }

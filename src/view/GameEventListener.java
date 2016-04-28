@@ -33,7 +33,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Square square = (Square) e.getComponent();
-		if(square.hasPiece()) {
+		if(square.hasPiece() && gamePanel.isTurn(square.getPiece().color)) {
 			gamePanel.dehighlightAllSquares();
 			gamePanel.setMoveSource(square);
 			if (square.isSelected())
@@ -57,7 +57,6 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 		if(e.getKeyCode() == KeyEvent.VK_ENTER && gamePanel.moveReady()) {
 			gamePanel.moveSelectedPiece();
 		}
-
 	}
 
 	@Override

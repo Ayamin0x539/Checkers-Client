@@ -1,13 +1,15 @@
 package test;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import controller.Game;
+import model.Board;
 import model.Color;
 import view.CheckersWindow;
 
-public class GUITest {
+public class GameTest {
 
 	public static void main(String[] args) {
 		
@@ -29,7 +31,26 @@ public class GUITest {
 		catch (IllegalAccessException e) {
 			// handle exception
 		}
-		CheckersWindow window = new CheckersWindow(new Game(Color.WHITE));
-		window.open();
+		Board board = new Board();
+		
+		final Game game = new Game(board);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				CheckersWindow window = new CheckersWindow(game);
+				window.open();
+				
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						game.playVsThunk();
+					}
+					
+				}).start();;
+			}
+		});
+		
 	}
 }

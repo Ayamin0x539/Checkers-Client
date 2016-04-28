@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -8,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 import model.Location;
+import model.Color;
 
 /**
  * Represents the canvas on which the checkers board is drawn.
@@ -46,13 +46,13 @@ public class CheckersCanvas extends JPanel {
 			if (i % 2 != 0) {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					/* Create a black square */
-					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2));
+					Square blackSquare = new Square(java.awt.Color.BLACK, new Location(i, j*2));
 					board[i][j*2] = blackSquare;
 					blackSquare.addMouseListener(boardListener);
 					this.add(blackSquare);
 
 					/* Create a white square */
-					Square whiteSquare = new Square(new Color(150, 0, 0), new Location(i, j*2 + 1));
+					Square whiteSquare = new Square(new java.awt.Color(150, 0, 0), new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = whiteSquare;
 					whiteSquare.addMouseListener(boardListener);
 					this.add(whiteSquare);
@@ -60,13 +60,13 @@ public class CheckersCanvas extends JPanel {
 			} else {
 				for (int j = 0; j < BOARD_DIM/2; ++j) {
 					/* Create a white square */
-					Square whiteSquare = new Square(new Color(150, 0, 0), new Location(i, j*2));
+					Square whiteSquare = new Square(new java.awt.Color(150, 0, 0), new Location(i, j*2));
 					board[i][j*2] = whiteSquare;
 					whiteSquare.addMouseListener(boardListener);
 					this.add(whiteSquare);
 
 					/* Create a black square */
-					Square blackSquare = new Square(Color.BLACK, new Location(i, j*2 + 1));
+					Square blackSquare = new Square(java.awt.Color.BLACK, new Location(i, j*2 + 1));
 					board[i][j*2 + 1] = blackSquare;
 					blackSquare.addMouseListener(boardListener);
 					this.add(blackSquare);
@@ -78,8 +78,8 @@ public class CheckersCanvas extends JPanel {
 	private void initCheckers() {
 		for (int row = 0; row < BOARD_DIM / 2 - 1; ++row) {
 			for (int col = 0; col < BOARD_DIM / 2; ++col) {
-				Checker whiteChecker = new Checker(new Color(0xB1B2B3));
-				Checker blackChecker = new Checker(new Color(89, 89, 89));
+				Checker whiteChecker = new Checker(Color.WHITE);
+				Checker blackChecker = new Checker(Color.BLACK);
 				board[BOARD_DIM - 1 - row][2*col+ (row % 2)].setPiece(whiteChecker);
 				board[row][2*col + (BOARD_DIM - 1 - row) %2]
 						.setPiece(blackChecker);
@@ -106,9 +106,21 @@ public class CheckersCanvas extends JPanel {
 	}
 
 	public void moveChecker(Location source, Location destination) {
+		if (board[source.row][source.column].hasPiece()) {
+			System.out.println("Has piece");
+		}
 		board[destination.row][destination.column].setPiece(board[source.row]
 				[source.column].getPiece());
 		board[source.row][source.column].setPiece(null);
+		this.revalidate();
+		this.repaint();
 		
+	}
+	
+	public void removeChecker(Location location) {
+		board[location.row][location.column].removePiece();
+		board[location.row][location.column].setPiece(null);
+		this.revalidate();
+		this.repaint();
 	}
 }
