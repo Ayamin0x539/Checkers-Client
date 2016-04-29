@@ -7,20 +7,12 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-<<<<<<< HEAD
 import controller.Game;
 import controller.GameConstants;
 import model.Color;
 import model.Location;
 import model.Move;
-import model.Piece;
-import model.Type;
-=======
-import model.Color;
-import model.Location;
-import model.Move;
-import controller.Game;
->>>>>>> 430f2be346c625bc746ce1659838d93253901c11
+
 
 /**
  * Represents the panel which will hold all of the graphical
@@ -130,8 +122,7 @@ public class GamePanel extends JPanel {
 	public void dehighlightValidDestinations() {
 		canvas.invalidateAllSquares();
 	}
-	
-<<<<<<< HEAD
+
 	public void movePiece(Move move) {
 		if (move.isJump()) {
 			int monkeyRow = (move.destination.row + move.source.row)/2;
@@ -146,19 +137,11 @@ public class GamePanel extends JPanel {
 		if (canPromote(canvas.getSquare(move.destination))) {
 			canvas.getSquare(move.destination).promotePiece();
 		}
-=======
-	public Location getMoveSource(){
-		return moveSource.getCellLocation();
-	}
-	
-	public Location getMoveDestination(){
-		return moveDestination.getCellLocation();
->>>>>>> 430f2be346c625bc746ce1659838d93253901c11
 	}
 	
 	
 	public void moveSelectedPiece() {
-<<<<<<< HEAD
+
 		/* Create the move */
 		Move move = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
 		
@@ -197,33 +180,6 @@ public class GamePanel extends JPanel {
 		moveDestination.setSelected(false);
 		moveSource = null;
 		moveDestination = null;
-=======
-		Move move = new Move(getMoveSource(), getMoveDestination());
-		game.movePiece(move);
-		
-		canvas.moveChecker(getMoveSource(), getMoveDestination());
-		dehighlightAllSquares();
-		
-		if(move.isJump()) {
-			Location monkeyLoc = new Location((move.destination.row 
-					+ move.source.row)/2, 
-					(move.source.column 
-							+ move.destination.column) / 2);
-			System.out.println(monkeyLoc);
-			removePiece(monkeyLoc);
-			moveSource.setSelected(false);
-			//moveDestination.setSelected(false);
-			moveSource = null;
-			//moveDestination = null;
-			
-		} else {
-			moveSource.setSelected(false);
-			moveDestination.setSelected(false);
-			moveSource = null;
-			moveDestination = null;
-			game.switchTurn();
-		}
->>>>>>> 430f2be346c625bc746ce1659838d93253901c11
 	}
 	
 	public boolean canPromote(Square square) {

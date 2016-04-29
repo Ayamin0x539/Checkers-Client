@@ -184,8 +184,6 @@ public class Square extends JPanel {
 	public Color getPieceColor() {
 		return pieceColor;
 	}
-<<<<<<< HEAD
-
 
 	public void placePiece(Color color) {
 		this.hasPiece = true;
@@ -200,11 +198,6 @@ public class Square extends JPanel {
 		return color;
 	}
 
-=======
-	
-	public void dehighlight() {
-		this.setBorder(null);
->>>>>>> 430f2be346c625bc746ce1659838d93253901c11
 
 	public void setKing(boolean king) {
 		this.king = king;
