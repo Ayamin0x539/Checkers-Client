@@ -16,6 +16,7 @@ public class Board {
 	private Piece[][] representation;
 	
 	private Piece lastPieceMoved;
+	private Move lastMove;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -27,6 +28,7 @@ public class Board {
 		movesSinceCapture = 0;
 		init();
 		lastPieceMoved = null;
+		lastMove = null;
 	}
 	
 	/**
@@ -43,6 +45,7 @@ public class Board {
 		}
 		movesSinceCapture = other.getMovesSinceCapture();
 		lastPieceMoved = other.getLastPieceMoved();
+		lastMove = other.getLastMove();
 	}
 
 	/**
@@ -211,6 +214,64 @@ public class Board {
 	}
 	
 	/**
+<<<<<<< HEAD
+=======
+	 * Generates the frontier for movement for all pieces.
+	 * @param color
+	 * @return
+	 */
+	public ArrayList<Board> generateMoveFrontier(Color color) {
+		ArrayList<Board> frontier = new ArrayList<Board>();
+		for (int i = 0; i < BOARD_SIZE; ++i) {
+			for (int j = 0; j < BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if(null != p && p.getColor() == color) {
+					ArrayList<Move> moves = generateMoves(this.representation[i][j]);
+					for (Move move : moves) {
+						Board board = new Board(this);
+						board.move(move);
+						frontier.add(board);
+					}
+				}
+			}
+		}
+		return frontier;
+	}
+	
+	public void move(Move move) {
+		representation[move.destination.row][move.destination.column]
+				= representation[move.source.row][move.source.column];
+		representation[move.source.row][move.source.column] = null;
+		representation[move.destination.row][move.destination.column]
+				.setLocation(new Location(move.destination.row, move.destination.column));
+		Piece moved = representation[move.destination.row][move.destination.column];
+		this.lastPieceMoved = moved;
+		this.lastMove = move;
+	}
+	
+	/**
+	 * Move the jumper and erase the jumpee.
+	 * @param jump
+	 */
+	public void jump(Move jump) {
+		representation
+			[(jump.destination.row + jump.source.row)/2]
+			[(jump.destination.column + jump.source.column)/2] = null; // monkey
+		representation[jump.destination.row][jump.destination.column] =
+				representation[jump.source.row][jump.source.column];
+		representation[jump.source.row][jump.source.column] = null;
+		representation[jump.destination.row][jump.destination.column]
+				.setLocation(new Location(jump.destination.row, jump.destination.column));
+
+		Piece moved = representation[jump.destination.row][jump.destination.column];
+		this.lastPieceMoved = moved;
+		this.lastMove = jump;
+		this.resetMovesSinceCapture();
+
+	}
+
+	/**
+>>>>>>> 430f2be346c625bc746ce1659838d93253901c11
 	 * Returns the possible jumps a piece can take.
 	 * @param color
 	 * @return
@@ -367,6 +428,9 @@ public class Board {
 	
 	public Piece getLastPieceMoved() {
 		return this.lastPieceMoved;
+	}
+	public Move getLastMove() {
+		return this.lastMove;
 	}
 }
 

@@ -90,6 +90,7 @@ public class CheckersWindow extends JFrame {
 		file.add(quit);
 		file.add(newGame);
 		file.add(instructions);
+		
 		menubar.add(file);
 		menubar.setVisible(true);
 		this.setJMenuBar(menubar);	
