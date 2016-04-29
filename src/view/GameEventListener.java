@@ -9,6 +9,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JOptionPane;
 
+import controller.GameConstants;
+
 /**
  * Represents an object which listens for any events which occur in the UI
  * @author john
@@ -33,14 +35,18 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Square square = (Square) e.getComponent();
-		if(square.hasPiece() && gamePanel.isTurn(square.getPiece().color)) {
-			gamePanel.dehighlightAllSquares();
+		if (square.hasPiece() && !gamePanel.isInJumpSequence() 
+				&& square.getPieceColor() == GameConstants.USER_COLOR
+				&& (!gamePanel.isForceJump() || square.hasPiece()
+						&& square.isValid())) {
+			gamePanel.dehighlightValidDestinations();
 			gamePanel.setMoveSource(square);
 			if (square.isSelected())
 				gamePanel.highlightValidDestinations(square.getCellLocation());
 			gamePanel.updateMoveMessage();
 		} else if (square.isValid()) {
 			gamePanel.setMoveDestination(square);
+			gamePanel.moveSelectedPiece();
 			gamePanel.updateMoveMessage();
 		}
 
@@ -54,9 +60,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER && gamePanel.moveReady()) {
-			gamePanel.moveSelectedPiece();
-		}
+
 	}
 
 	@Override

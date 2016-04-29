@@ -40,15 +40,6 @@ public class GameTest {
 			public void run() {
 				CheckersWindow window = new CheckersWindow(game);
 				window.open();
-				
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						game.playVsThunk();
-					}
-					
-				}).start();;
 			}
 		});
 		

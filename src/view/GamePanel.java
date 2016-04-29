@@ -8,9 +8,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Game;
+import controller.GameConstants;
 import model.Color;
 import model.Location;
 import model.Move;
+import model.Piece;
+import model.Type;
 
 /**
  * Represents the panel which will hold all of the graphical
@@ -114,41 +117,83 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void dehighlightAllSquares() {
+	public void dehighlightValidDestinations() {
 		canvas.invalidateAllSquares();
+	}
+	
+	public void movePiece(Move move) {
+		if (move.isJump()) {
+			int monkeyRow = (move.destination.row + move.source.row)/2;
+			int monkeyCol = (move.destination.column + move.source.column)/2;
+	
+			/* Remove the piece being jumped ("monkey in the middle") */
+			canvas.removePiece(new Location(monkeyRow, monkeyCol));
+		}
+	
+		canvas.movePiece(move);
+		
+		if (canPromote(canvas.getSquare(move.destination))) {
+			canvas.getSquare(move.destination).promotePiece();
+		}
 	}
 	
 	
 	public void moveSelectedPiece() {
-		Move theMove = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
-		game.movePiece(theMove);
-		canvas.moveChecker(moveSource.getCellLocation(), moveDestination.getCellLocation());
-		dehighlightAllSquares();
+		/* Create the move */
+		Move move = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
+		
+		/* Request the move */
+		game.requestMove(move);
+		
+		/* Get rid of valid destination options */
+		dehighlightValidDestinations();
+		
+		/* If the user just jumped and the game is still in a jump sequence */
+		/* Select the same piece again */
+		if (move.isJump() && game.isInJumpSequence()) {
+			moveDestination.setSelected(true);
+			highlightValidDestinations(moveDestination.getCellLocation());
+			moveSource = moveDestination;
+			moveDestination = null;
+		} else {
+			/* Reset the move choices */
+			resetMove();
+		}
+		
+		/* See if any jump moves are available */
+		ArrayList<Move> jumpMoves = 
+				game.getAllAvailableJumpMoves(GameConstants.USER_COLOR);
+		
+		if (!jumpMoves.isEmpty()) {
+			for (Move jump : jumpMoves) {
+				canvas.highlightAndValidateSquare(jump.source);
+			}
+		}
+		
+	}
+	
+	public void resetMove() {
 		moveSource.setSelected(false);
 		moveDestination.setSelected(false);
 		moveSource = null;
 		moveDestination = null;
-		if(!theMove.isJump()) {
-			game.switchTurn();
-		} else {
-			Location monkeyLoc = new Location((theMove.destination.row 
-					+ theMove.source.row)/2, 
-					(theMove.source.column 
-							+ theMove.destination.column) / 2);
-			System.out.println(monkeyLoc);
-			removePiece(monkeyLoc);
-		}
 	}
 	
-	public void removePiece(Location location ) {
-		canvas.removeChecker(location);
+	public boolean canPromote(Square square) {
+		int row = square.getCellLocation().row;
+
+		return !square.isKing() && 
+				((row == 0 && square.getPieceColor() == Color.WHITE) || 
+						(row == CheckersCanvas.BOARD_DIM - 1 && 
+						square.getPieceColor() == Color.BLACK));
 	}
 	
-	public void moveArbitraryPiece(Move move) {
-		canvas.moveChecker(move.source, move.destination);
+
+	public boolean isInJumpSequence() {
+		return game.isInJumpSequence();
 	}
 	
-	public boolean isTurn(Color color) {
-		return color == game.getCurrentTurn();
+	public boolean isForceJump() {
+		return !game.getAllAvailableJumpMoves(GameConstants.USER_COLOR).isEmpty();
 	}
 }

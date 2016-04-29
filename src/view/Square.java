@@ -1,8 +1,14 @@
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import model.Color;
 import model.Location;
 
 /**
@@ -12,17 +18,17 @@ import model.Location;
  *
  */
 @SuppressWarnings("serial")
-public class Square extends JPanel implements MouseListener {
+public class Square extends JPanel {
 
 	/** 
 	 * The {@link Location} (row, col) of the square on the board.
 	 */
 	private final Location location;
 
-	/** 
-	 * The {@link Checker} object contained in this square. Null if there is none.
-	 */
-	private Checker piece;
+	private boolean hasPiece;
+
+	private Color pieceColor;
+
 
 	/**
 	 * A boolean value representing whether the square is selected for movement.
@@ -30,6 +36,8 @@ public class Square extends JPanel implements MouseListener {
 	private boolean selected;
 
 	private boolean valid;
+	
+	private boolean king;
 
 
 	/**
@@ -41,6 +49,8 @@ public class Square extends JPanel implements MouseListener {
 		super();
 		this.location = location;
 		this.selected = false;
+		this.king = false;
+		this.valid = false;
 		initSquare(color);
 	}
 
@@ -50,8 +60,11 @@ public class Square extends JPanel implements MouseListener {
 	 * @param color	A {@link Color} object representing the square's color. 
 	 */
 	private void initSquare(Color color) {
-		this.setBackground(color);
-		this.setLayout(new BorderLayout());
+		if (color == Color.BLACK) {
+			this.setBackground(java.awt.Color.BLACK);
+		} else if (color == Color.WHITE) {
+			this.setBackground(new java.awt.Color(150, 0, 0));
+		}
 	}
 
 
@@ -62,32 +75,6 @@ public class Square extends JPanel implements MouseListener {
 		return location;
 	}
 
-	/**
-	 * {@link Square#piece}
-	 */
-	public Checker getPiece() {
-		return piece;
-	}
-
-	/**
-	 * Adds the given piece to the square's panel.
-	 * @param piece A {@link Checker} object to place in the square.
-	 */
-	public void setPiece(Checker piece) {
-		this.piece = piece;
-		if (piece != null) {
-			this.add(piece);
-			piece.addMouseListener(this);
-		} 
-		this.validate();
-		this.repaint();
-	}
-	
-	public void removePiece() {
-
-		this.remove(this.piece);
-	}
-	
 
 	/**
 	 * {@link Square#selected}
@@ -103,9 +90,9 @@ public class Square extends JPanel implements MouseListener {
 	 */
 	public void setSelected(boolean val) {
 		if (val) {
-			this.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+			this.setBorder(BorderFactory.createLineBorder(java.awt.Color.GREEN));
 		} else if (valid){
-			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+			this.setBorder(BorderFactory.createLineBorder(java.awt.Color.YELLOW));
 		} else {
 			this.setBorder(null);
 		}
@@ -126,39 +113,95 @@ public class Square extends JPanel implements MouseListener {
 	 * 			<code>false</code> otherwise.
 	 */
 	public boolean hasPiece() {
-		return this.piece != null;
+		return hasPiece;
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		/* Send the event to the lister of the square (GameEventListener) */
-		MouseEvent newE = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), 
-				e.getClickCount(), e.getX(), e.getY(), e.isPopupTrigger());
-		this.dispatchEvent(newE);	
+	
+	public void promotePiece() {
+		System.out.println("Kinged");
+		this.king = true;
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {}
+	
+	public boolean isKing() {
+		return king;
+	}
 
 
 	public void highlight() {
-		this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+		this.setBorder(BorderFactory.createLineBorder(java.awt.Color.YELLOW));
 
 	}
 
+	/**
+	 * Overrides the paintComponent method to paint a circle which
+	 * represents the checkers piece.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+		
+		/* Cast to a 2D graphics object */
+		Graphics2D g2 = (Graphics2D) g;
+		/* Make a call to the super classes painComponent method */
+		super.paintComponent(g2);
+		if (hasPiece) {
+			/* Add some hints from rendering */
+			RenderingHints hints = new RenderingHints(null);
+			hints.put(RenderingHints.KEY_ANTIALIASING, 
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			hints.put(RenderingHints.KEY_INTERPOLATION, 
+					RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			hints.put(RenderingHints.KEY_RENDERING, 
+					RenderingHints.VALUE_RENDER_QUALITY);
+			g2.setRenderingHints(hints);
+
+			/* Set the graphics object's color to the checker's color
+			 * and paint an oval which represents the checker. */
+			if (this.pieceColor == Color.WHITE) {
+				g2.setColor(new java.awt.Color(0xB1B2B3));
+				g2.fillOval(5, 5, getSize().width-10,getSize().height-10);
+				g2.setColor(java.awt.Color.BLACK);
+				if (king) {
+					g2.setFont(new Font("Courier", Font.PLAIN, 24));
+					g2.drawString("KING", this.getWidth()/2 - 26, this.getHeight()/2 + 6);
+				}
+			} else if (this.pieceColor == Color.BLACK) {
+				g2.setColor(new java.awt.Color(89, 89, 89));
+				g2.fillOval(5, 5, getSize().width-10,getSize().height-10);
+				g2.setColor(java.awt.Color.WHITE);
+				if (king) {
+					g2.setFont(new Font("Courier", Font.PLAIN, 24));
+					g2.drawString("KING", this.getWidth()/2 - 26, this.getHeight()/2 + 6);
+				}
+			}
+			
+		}
+	}
 
 	public void dehighlight() {
 		this.setBorder(null);
 
+	}
+
+	public Color getPieceColor() {
+		return pieceColor;
+	}
+
+
+	public void placePiece(Color color) {
+		this.hasPiece = true;
+		this.pieceColor = color;
+	}
+
+	public Color removePiece() {
+		this.hasPiece = false;
+		Color color = this.pieceColor;
+		this.pieceColor = null;
+		this.king = false;
+		return color;
+	}
+
+
+	public void setKing(boolean king) {
+		this.king = king;
 	}
 
 
