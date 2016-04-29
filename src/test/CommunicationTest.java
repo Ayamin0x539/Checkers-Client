@@ -13,14 +13,8 @@ public class CommunicationTest {
 	}
 	
 	public boolean moveExistsInSet(Move move, ArrayList<Move> set) {
-		for (Move m : set) {
-			if (	move.destination.row 	== m.destination.row &&
-					move.destination.column == m.destination.column &&
-					move.source.row			== m.source.row &&
-					move.source.column		== m.source.column) {
-				return true;
-			}
-		}
+		for (Move m : set)
+			if (move.equals(m)) return true;
 		return false;
 	}
 	
