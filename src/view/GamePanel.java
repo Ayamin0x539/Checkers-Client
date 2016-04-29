@@ -143,7 +143,7 @@ public class GamePanel extends JPanel {
 	public void moveSelectedPiece() {
 
 		/* Create the move */
-		Move move = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
+		final Move move = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
 
 		/* Get rid of valid destination options */
 		dehighlightValidDestinations();
