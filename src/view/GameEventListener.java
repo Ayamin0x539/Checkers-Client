@@ -78,8 +78,15 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 			System.exit(0);
 		} else if (e.getActionCommand().equals("Instructions")) {
 			// TODO: Create an instructions dialog box, this is just for testing
-			JOptionPane.showMessageDialog(null, "<html><ol><li>instr 1</li>"
-					+ "</ol></html>", "Instructions", JOptionPane.INFORMATION_MESSAGE);
+			String instructions = ""
+					+ "<html>"
+						+ "<ol>"
+							+ "<li>Click the piece you want to move.</li>"
+							+ "<li>Click the place you want to move to.</li>"
+							+ "<li>Try not to lose.</li>"
+						+ "</ol>"
+					+ "</html>";
+			JOptionPane.showMessageDialog(null, instructions, "Instructions", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }
