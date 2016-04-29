@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import controller.Game;
 import model.Color;
 import model.Location;
 import model.Move;
+import controller.Game;
 
 /**
  * Represents the panel which will hold all of the graphical
@@ -67,12 +67,15 @@ public class GamePanel extends JPanel {
 	}
 
 	public void updateMoveMessage() {
-		if (moveSource == null) {
+//		if (moveSource == null && moveDestination == null) {
+//			displayMessage("---");
+//		} else 
+			if (moveSource == null) {
 			displayMessage("Select a piece to move.");
 		} else if (moveDestination == null) {
 			displayMessage("Select a destination.");
 		} else {
-			displayMessage("Select \"Move\" to move the piece.");
+			displayMessage("Press enter to confirm move.");
 		}
 	}
 
@@ -118,25 +121,40 @@ public class GamePanel extends JPanel {
 		canvas.invalidateAllSquares();
 	}
 	
+	public Location getMoveSource(){
+		return moveSource.getCellLocation();
+	}
+	
+	public Location getMoveDestination(){
+		return moveDestination.getCellLocation();
+	}
+	
 	
 	public void moveSelectedPiece() {
-		Move theMove = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
-		game.movePiece(theMove);
-		canvas.moveChecker(moveSource.getCellLocation(), moveDestination.getCellLocation());
+		Move move = new Move(getMoveSource(), getMoveDestination());
+		game.movePiece(move);
+		
+		canvas.moveChecker(getMoveSource(), getMoveDestination());
 		dehighlightAllSquares();
-		moveSource.setSelected(false);
-		moveDestination.setSelected(false);
-		moveSource = null;
-		moveDestination = null;
-		if(!theMove.isJump()) {
-			game.switchTurn();
-		} else {
-			Location monkeyLoc = new Location((theMove.destination.row 
-					+ theMove.source.row)/2, 
-					(theMove.source.column 
-							+ theMove.destination.column) / 2);
+		
+		if(move.isJump()) {
+			Location monkeyLoc = new Location((move.destination.row 
+					+ move.source.row)/2, 
+					(move.source.column 
+							+ move.destination.column) / 2);
 			System.out.println(monkeyLoc);
 			removePiece(monkeyLoc);
+			moveSource.setSelected(false);
+			//moveDestination.setSelected(false);
+			moveSource = null;
+			//moveDestination = null;
+			
+		} else {
+			moveSource.setSelected(false);
+			moveDestination.setSelected(false);
+			moveSource = null;
+			moveDestination = null;
+			game.switchTurn();
 		}
 	}
 	

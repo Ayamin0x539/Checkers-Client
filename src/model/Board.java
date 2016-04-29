@@ -16,6 +16,7 @@ public class Board {
 	private Piece[][] representation;
 	
 	private Piece lastPieceMoved;
+	private Move lastMove;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -27,6 +28,7 @@ public class Board {
 		movesSinceCapture = 0;
 		init();
 		lastPieceMoved = null;
+		lastMove = null;
 	}
 	
 	/**
@@ -43,6 +45,7 @@ public class Board {
 		}
 		movesSinceCapture = other.getMovesSinceCapture();
 		lastPieceMoved = other.getLastPieceMoved();
+		lastMove = other.getLastMove();
 	}
 
 	public boolean isValidSquare(Location location) {
@@ -151,6 +154,7 @@ public class Board {
 				.setLocation(new Location(move.destination.row, move.destination.column));
 		Piece moved = representation[move.destination.row][move.destination.column];
 		this.lastPieceMoved = moved;
+		this.lastMove = move;
 	}
 	
 	/**
@@ -169,7 +173,7 @@ public class Board {
 
 		Piece moved = representation[jump.destination.row][jump.destination.column];
 		this.lastPieceMoved = moved;
-		
+		this.lastMove = jump;
 		this.resetMovesSinceCapture();
 	}
 
@@ -352,6 +356,9 @@ public class Board {
 	
 	public Piece getLastPieceMoved() {
 		return this.lastPieceMoved;
+	}
+	public Move getLastMove() {
+		return this.lastMove;
 	}
 }
 

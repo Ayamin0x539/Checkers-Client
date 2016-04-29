@@ -155,8 +155,7 @@ public class Square extends JPanel implements MouseListener {
 		this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 
 	}
-
-
+	
 	public void dehighlight() {
 		this.setBorder(null);
 

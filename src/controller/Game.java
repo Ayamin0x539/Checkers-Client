@@ -1,14 +1,13 @@
 package controller;
 
-import java.io.Console;
 import java.util.ArrayList;
 
-import view.GamePanel;
 import model.Board;
 import model.Color;
 import model.Location;
 import model.Move;
 import model.Piece;
+import view.GamePanel;
 
 public class Game {
 	private Board board;

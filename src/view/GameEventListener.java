@@ -56,6 +56,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ENTER && gamePanel.moveReady()) {
 			gamePanel.moveSelectedPiece();
+			gamePanel.updateMoveMessage();
 		}
 	}
 
