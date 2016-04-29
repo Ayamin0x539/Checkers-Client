@@ -20,10 +20,6 @@ public class Game {
 		current_turn = Color.BLACK;
 	}
 	
-	public ArrayList<Move> getMoveFrontier(Color color) {
-		return board.generateAllPossibleMoves(color);
-	}
-	
 	public void movePiece(Move move) {
 		if (move.isJump()) {
 			board.jump(move);
@@ -51,18 +47,11 @@ public class Game {
 			}
 			return jumpset;
 		}
-		
-		Piece movee = board.getPiece(source);
-		ArrayList<Move> moves = this.getMoveFrontier(movee.getColor());
-		
-		ArrayList<Move> moves_of_movee = new ArrayList<Move>();
-		
-		for (Move move : moves) {
-			if (move.source.equals(movee.getLocation())) {
-				moves_of_movee.add(move);
-			}
-		}
-		return moves_of_movee;
+		ArrayList<Move> moves = board.generateMoves(board.getPiece(source));
+		ArrayList<Move> jumps = board.generateJumpMoves(board.getPiece(source));
+		ArrayList<Move> allMoves = new ArrayList<Move>(moves);
+		allMoves.addAll(jumps);
+		return allMoves;
 	}
 	
 	public void playVsThunk() {
@@ -90,7 +79,7 @@ public class Game {
 					panel.moveArbitraryPiece(jump);
 				}
 				else {
-					ArrayList<Move> moveset = this.getMoveFrontier(THUNK_COLOR);
+					ArrayList<Move> moveset = board.generateAllPossibleMoves(THUNK_COLOR);
 					if (moveset.isEmpty()) {
 						System.out.println("Thunk is out of moves.");
 						break;
@@ -105,8 +94,8 @@ public class Game {
 				}
 			}
 			if (this.current_turn == USER_COLOR) {
-				ArrayList<Move> moveset = this.getMoveFrontier(USER_COLOR);
-				if (moveset.isEmpty()) break;
+				//ArrayList<Move> moveset = board.generateAllPossibleMoves(USER_COLOR);
+				//if (moveset.isEmpty()) break;
 			}
 			
 			//board.print();
