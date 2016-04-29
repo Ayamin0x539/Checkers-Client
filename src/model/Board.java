@@ -169,8 +169,6 @@ public class Board {
 
 		Piece moved = representation[jump.destination.row][jump.destination.column];
 		this.lastPieceMoved = moved;
-		
-		this.resetMovesSinceCapture();
 	}
 
 	/**
@@ -344,10 +342,6 @@ public class Board {
 	
 	public int getMovesSinceCapture() {
 		return this.movesSinceCapture;
-	}
-	
-	private void resetMovesSinceCapture() {
-		this.movesSinceCapture = 0;
 	}
 	
 	public Piece getLastPieceMoved() {
