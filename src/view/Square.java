@@ -117,7 +117,6 @@ public class Square extends JPanel {
 	}
 	
 	public void promotePiece() {
-		System.out.println("Kinged");
 		this.king = true;
 	}
 	
@@ -178,7 +177,6 @@ public class Square extends JPanel {
 
 	public void dehighlight() {
 		this.setBorder(null);
-
 	}
 
 	public Color getPieceColor() {

@@ -72,7 +72,7 @@ public class GamePanel extends JPanel {
 //		if (moveSource == null && moveDestination == null) {
 //			displayMessage("---");
 //		} else 
-			if (moveSource == null) {
+		if (moveSource == null) {
 			displayMessage("Select a piece to move.");
 		} else if (moveDestination == null) {
 			displayMessage("Select a destination.");
@@ -144,35 +144,39 @@ public class GamePanel extends JPanel {
 
 		/* Create the move */
 		Move move = new Move(moveSource.getCellLocation(), moveDestination.getCellLocation());
-		
-		/* Request the move */
-		game.requestMove(move);
-		
+
 		/* Get rid of valid destination options */
 		dehighlightValidDestinations();
-		
-		/* If the user just jumped and the game is still in a jump sequence */
-		/* Select the same piece again */
-		if (move.isJump() && game.isInJumpSequence()) {
-			moveDestination.setSelected(true);
-			highlightValidDestinations(moveDestination.getCellLocation());
-			moveSource = moveDestination;
-			moveDestination = null;
-		} else {
-			/* Reset the move choices */
-			resetMove();
-		}
-		
-		/* See if any jump moves are available */
-		ArrayList<Move> jumpMoves = 
-				game.getAllAvailableJumpMoves(GameConstants.USER_COLOR);
-		
-		if (!jumpMoves.isEmpty()) {
-			for (Move jump : jumpMoves) {
-				canvas.highlightAndValidateSquare(jump.source);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				/* Request the move */
+				game.requestMove(move);
+
+				/* If the user just jumped and the game is still in a jump sequence */
+				/* Select the same piece again */
+				if (move.isJump() && game.isInJumpSequence()) {
+					moveDestination.setSelected(true);
+					highlightValidDestinations(moveDestination.getCellLocation());
+					moveSource = moveDestination;
+					moveDestination = null;
+				} else {
+					/* Reset the move choices */
+					resetMove();
+				}
+
+				/* See if any jump moves are available */
+				ArrayList<Move> jumpMoves = 
+						game.getAllAvailableJumpMoves(GameConstants.USER_COLOR);
+
+				if (!jumpMoves.isEmpty()) {
+					for (Move jump : jumpMoves) {
+						canvas.highlightAndValidateSquare(jump.source);
+					}
+				}
 			}
-		}
-		
+		}).start();
 	}
 	
 	public void resetMove() {

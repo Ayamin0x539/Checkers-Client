@@ -23,7 +23,12 @@ public class Game {
 	public void requestMove(Move move) {
 		board.movePiece(move);
 		gamePanel.movePiece(move);
-		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		/* If this is the first jump of the jump sequence */
 		if (move.isJump() && !inJumpSequence) inJumpSequence = true;
 		
@@ -37,7 +42,7 @@ public class Game {
 			Move thunkMove = getThunkMove();
 			board.movePiece(thunkMove);
 			gamePanel.movePiece(thunkMove);
-			
+	
 			if (thunkMove.isJump()) inJumpSequence = true;
 			
 			while (inJumpSequence) {
@@ -55,7 +60,7 @@ public class Game {
 	
 	public Move getThunkMove() {
 		ArrayList<Move> availableMoves;
-		
+
 		if (inJumpSequence) {
 			availableMoves = 
 					board.generateJumpMovesForPiece(board.getLastPieceMoved());

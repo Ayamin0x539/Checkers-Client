@@ -37,8 +37,8 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 		Square square = (Square) e.getComponent();
 		if (square.hasPiece() && !gamePanel.isInJumpSequence() 
 				&& square.getPieceColor() == GameConstants.USER_COLOR
-				&& (!gamePanel.isForceJump() || square.hasPiece()
-						&& square.isValid())) {
+				&& (!gamePanel.isForceJump() || (square.hasPiece()
+						&& square.isValid()))) {
 			gamePanel.dehighlightValidDestinations();
 			gamePanel.setMoveSource(square);
 			if (square.isSelected())
