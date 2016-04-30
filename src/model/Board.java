@@ -389,8 +389,8 @@ public class Board {
 	
 	public int getHeuristic(Color color) {
 		/* Kings are weighted more, so we count for them twice */
-		int blackHeuristic = blackPieces + blackKings * 2;
-		int whiteHeuristic = whitePieces + whiteKings * 2;
+		int blackHeuristic = blackPieces + blackKings;
+		int whiteHeuristic = whitePieces + whiteKings;
 		return - (color == Color.BLACK ? 
 				(blackHeuristic - whiteHeuristic) : 
 					(whiteHeuristic - blackHeuristic));
