@@ -9,4 +9,5 @@ public class GameConstants {
 	public static final Color USER_COLOR = Color.BLACK;
 	public static final int MAX_PASSIVE_MOVES = 50;
 	public static final int MAX_SEARCH_DEPTH = 7;
+	public static final int BOARD_SIZE = 8;
 }
