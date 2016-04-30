@@ -50,7 +50,7 @@ public class Game {
 		/* If the game is not in the middle of a jump sequence, move the thunk */
 		if (!inJumpSequence) {
 
-			Move thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH);
+			Move thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH, inJumpSequence);
 			if (thunkMove != null) {
 				if (thunkMove.isJump()) inJumpSequence = true;
 				
@@ -62,8 +62,8 @@ public class Game {
 				gamePanel.movePiece(thunkMove);
 
 				while (inJumpSequence) {
-					thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH);
-					System.out.println("REPEATING MOVE");
+					thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH, inJumpSequence);
+
 					if (thunkMove != null) {
 						if (movePromotesPiece(thunkMove)) {
 							inJumpSequence = false;
@@ -104,70 +104,107 @@ public class Game {
 			return null;
 		}
 	}
-	
-	public Move getMinimaxMove(int depth, boolean currentlyIsInJumpSequence) {
-		// need to store the jump sequence at each call stack 
-		Move bestMove = null;
+
+	public Move getMinimaxMove(int depth, boolean inJumpSequence) {
+		ArrayList<Board> boardFrontier = null;
+		ArrayList<Move> moveFrontier = null;
+		ArrayList<Integer> moveScores = new ArrayList<Integer>();
+
 		if (inJumpSequence) {
-			ArrayList<Board> boardFrontier = board.generateJumpFrontierForPiece(board.getLastPieceMoved());
-			ArrayList<Move> moveFrontier = board.generateJumpMovesForPiece(board.getLastPieceMoved());
-			ArrayList<Integer> moveScores = new ArrayList<Integer>();
+			/* Generate the frontier only for the piece that just moves */
+			boardFrontier = board.generateJumpFrontierForPiece(board.getLastPieceMoved());
+			moveFrontier = board.generateJumpMovesForPiece(board.getLastPieceMoved());
 			
-			Color otherColor = 
-		}
-		else {
-			ArrayList<Board> boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
-			ArrayList<Move> moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
-			ArrayList<Integer> moveScores = new ArrayList<Integer>();
-			
-			Color otherColor = GameConstants.THUNK_COLOR == Color.BLACK ? 
-					Color.WHITE : Color.BLACK;
-			// Recurse for each one here
-			for (Board b : boardFrontier) {
-				moveScores.add(this.getMinimaxScore(otherColor, b, depth));
+			/* If we can't jump anymore, we can't make a move */
+			if (boardFrontier.isEmpty()) {
+				return null;
 			}
-			
-			int maxScore = Integer.MIN_VALUE;
-			
-			
-			for (int i = 0; i < moveScores.size(); ++i) {
-				if (moveScores.get(i) > maxScore) {
-					bestMove = moveFrontier.get(i);
-					maxScore = moveScores.get(i);
-				}
+
+		} else {
+			/* Generate the frontier for all pieces */
+			boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
+			moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
+			System.out.println("Board frontier size: " + boardFrontier.size());
+			System.out.println("Move frontier size: " + moveFrontier.size());
+		}
+		
+		Color nextColor;
+		/* Determine the next color to move */
+		if (GameConstants.THUNK_COLOR == Color.BLACK && !inJumpSequence) {
+			nextColor = Color.WHITE;
+		} else {
+			nextColor = Color.BLACK;
+		}
+
+		/* Calculate the minimax score for each board in the frontier */
+		for (Board b : boardFrontier) {
+			moveScores.add(this.getMinimaxScore(nextColor, b, depth, inJumpSequence));
+		}
+
+		/* Determine the maximum minimax score and which move led to that score */
+		int maxScore = Integer.MIN_VALUE;
+		Move bestMove = null;
+
+		for (int i = 0; i < moveScores.size(); ++i) {
+			//System.out.println("score[" + i + "] = " + moveScores.get(i));
+			if (moveScores.get(i) > maxScore) {
+				//System.out.println("Best move is " + i);
+				bestMove = moveFrontier.get(i);
+				maxScore = moveScores.get(i);
 			}
 		}
+
 		return bestMove;
 	}
 	
-	public int getMinimaxScore(Color color, Board b, int depth) {
+	public int getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
+		ArrayList<Board> boardFrontier;
+		ArrayList<Integer> moveScores = new ArrayList<Integer>();
+		
 		if (inJumpSequence) {
+			/* Generate the frontier only for the piece that just moves */
+			boardFrontier = b.generateJumpFrontierForPiece(b.getLastPieceMoved());
 			
+			/* If we can't jump anymore, get out of the jump sequence */
+			if (boardFrontier.isEmpty()) {
+				inJumpSequence = false;
+			}
+		} else {
+			/* Generate the frontier for all pieces */
+			boardFrontier = b.generateFrontier(color);
+		}
+		
+		/* If we have reached the maximum depth or an end state for the gam */
+		if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
+				|| boardFrontier.size() == 0) {
+			Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
+			return b.getHeuristic(otherColor);
+		}
+		
+		Color nextColor;
+		/* Determine the next color to move */
+		if (GameConstants.THUNK_COLOR == Color.BLACK && !inJumpSequence) {
+			nextColor = Color.WHITE;
+		} else {
+			nextColor = Color.BLACK;
+		}
+
+		for (Board board : boardFrontier) {
+			int moveScore = getMinimaxScore(nextColor, board, depth - 1, inJumpSequence);
+			moveScores.add(moveScore);
+		}
+
+		if (color == GameConstants.THUNK_COLOR) {
+			/* Since these scores are obtained from when it is the other 
+			 * player's turn, we want to minimize....I think
+			 */
+			return Collections.max(moveScores);
 		}
 		else {
-			ArrayList<Board> boardFrontier = b.generateFrontier(color);
-			if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
-					|| boardFrontier.size() == 0) {
-				Color otherColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
-				return b.getHeuristic(otherColor);
-			}
-			
-			ArrayList<Integer> moveScores = new ArrayList<Integer>();
-	
-			for (Board board : boardFrontier) {
-				Color nextColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
-				moveScores.add(getMinimaxScore(nextColor, board, depth - 1));
-			}
-	
-			if (color == GameConstants.THUNK_COLOR) {
-				// Maximize
-				return Collections.max(moveScores);
-			}
-			else {
-				// Minimize
-				return Collections.min(moveScores);
-			}
+			// Minimize
+			return Collections.min(moveScores);
 		}
+
 	}
 	
 	public void notifyClientWin() {

@@ -6,7 +6,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import controller.Game;
 import model.Board;
-import model.Color;
 import view.CheckersWindow;
 
 public class GameTest {

@@ -1,5 +1,4 @@
 package test;
-
 import model.Board;
 
 public class BoardTest {

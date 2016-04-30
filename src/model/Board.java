@@ -153,38 +153,24 @@ public class Board {
 	 */
 	public ArrayList<Board> generateFrontierFromRegularMoves(Color color) {
 		ArrayList<Board> frontier = new ArrayList<Board>();
-		for (int i = 0; i < BOARD_SIZE; ++i) {
-			for (int j = 0; j < BOARD_SIZE; ++j) {
-				Piece p = this.representation[i][j];
-				if(null != p && p.getColor() == color) {
-					ArrayList<Move> moves = generateRegularMovesForPiece(this.representation[i][j]);
-					for (Move move : moves) {
-						Board board = new Board(this);
-						board.movePiece(move);
-						frontier.add(board);
-					}
-				}
-			}
+		ArrayList<Move> moves = generateAllRegularMoves(color);
+		for (Move move : moves) {
+			Board board = new Board(this);
+			board.movePiece(move);
+			frontier.add(board);
 		}
-		return frontier;
+		return frontier;	
 	}
 
 	public ArrayList<Board> generateFrontierFromJumps(Color color) {
 		ArrayList<Board> frontier = new ArrayList<Board>();
-		for (int i = 0; i < BOARD_SIZE; ++i) {
-			for (int j = 0; j < BOARD_SIZE; ++j) {
-				Piece p = this.representation[i][j];
-				if (null != p && p.getColor() == color) {
-					ArrayList<Move> jump_moves = generateJumpMovesForPiece(this.representation[i][j]);
-					for (Move jump : jump_moves) {
-						Board board = new Board(this);
-						board.movePiece(jump);
-						frontier.add(board);
-					}
-				}
-			}
+		ArrayList<Move> moves = generateAllJumpMoves(color);
+		for (Move move : moves) {
+			Board board = new Board(this);
+			board.movePiece(move);
+			frontier.add(board);
 		}
-		return frontier;		
+		return frontier;	
 	}
 
 	public ArrayList<Move> generateMovesForPiece(Piece p) {
