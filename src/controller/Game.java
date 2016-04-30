@@ -126,7 +126,9 @@ public class Game {
 		
 		Color nextColor;
 		/* Determine the next color to move */
-		if (GameConstants.THUNK_COLOR == Color.BLACK && !inJumpSequence) {
+		if (inJumpSequence) {
+			nextColor = GameConstants.THUNK_COLOR;
+		} else if (GameConstants.THUNK_COLOR == Color.BLACK) {
 			nextColor = Color.WHITE;
 		} else {
 			nextColor = Color.BLACK;
