@@ -106,7 +106,7 @@ public class Game {
 	public Move getMinimaxMove(int depth, boolean inJumpSequence) {
 		ArrayList<Board> boardFrontier = null;
 		ArrayList<Move> moveFrontier = null;
-		ArrayList<Double> moveScores = new ArrayList<Double>();
+		ArrayList<Integer> moveScores = new ArrayList<Integer>();
 
 		if (inJumpSequence) {
 			/* Generate the frontier only for the piece that just moves */
@@ -140,7 +140,7 @@ public class Game {
 		}
 
 		/* Determine the maximum minimax score and which move led to that score */
-		double maxScore = Double.MIN_VALUE;
+		int maxScore = Integer.MIN_VALUE;
 		Move bestMove = null;
 
 		for (int i = 0; i < moveScores.size(); ++i) {
@@ -159,9 +159,9 @@ public class Game {
 		return bestMove;
 	}
 
-	public double getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
+	public int getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
 		ArrayList<Board> boardFrontier;
-		ArrayList<Double> moveScores = new ArrayList<Double>();
+		ArrayList<Integer> moveScores = new ArrayList<Integer>();
 		Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
 
 		if (depth == 0) {
@@ -196,7 +196,7 @@ public class Game {
 		}
 
 		for (Board board : boardFrontier) {
-			double moveScore = getMinimaxScore(nextColor, board, depth - 1, inJumpSequence);
+			int moveScore = getMinimaxScore(nextColor, board, depth - 1, inJumpSequence);
 			moveScores.add(moveScore);
 		}
 
