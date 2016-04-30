@@ -165,7 +165,7 @@ public class Game {
 		Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
 
 		if (depth == 0) {
-			return b.getHeuristic(color);
+			return b.getHeuristic(otherColor);
 		}
 
 		if (inJumpSequence) {
