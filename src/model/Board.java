@@ -387,11 +387,11 @@ public class Board {
 				location.row == BOARD_SIZE - 1 );
 	}
 	
-	public double getHeuristic(Color color) {
+	public int getHeuristic(Color color) {
 		/* Kings are weighted more, so we count for them twice */
 
-		double blackHeuristic = blackPieces + blackKings * 1.5;
-		double whiteHeuristic = whitePieces + whiteKings * 1.5;
+		int blackHeuristic = blackPieces + blackKings;
+		int whiteHeuristic = whitePieces + whiteKings;
 		return - (color == Color.BLACK ? 
 				(blackHeuristic - whiteHeuristic) : 
 					(whiteHeuristic - blackHeuristic));
