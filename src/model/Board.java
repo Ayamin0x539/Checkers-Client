@@ -17,6 +17,9 @@ public class Board {
 	
 	private Piece lastPieceMoved;
 	private Move lastMove;
+	
+	private int blackPieces;
+	private int whitePieces;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -29,6 +32,8 @@ public class Board {
 		init();
 		lastPieceMoved = null;
 		lastMove = null;
+		blackPieces = 12;
+		whitePieces = 12;
 	}
 	
 	/**
@@ -46,6 +51,8 @@ public class Board {
 		movesSinceCapture = other.getMovesSinceCapture();
 		lastPieceMoved = other.getLastPieceMoved();
 		lastMove = other.getLastMove();
+		blackPieces = other.blackPieces;
+		whitePieces = other.whitePieces;
 	}
 
 	/**
@@ -87,6 +94,10 @@ public class Board {
 			int monkeyRow = (destRow + sourceRow)/2;
 			int monkeyCol = (destCol + sourceCol)/2;
 	
+			Color color_removed = representation[monkeyRow][monkeyCol].getColor();
+			
+			if (color_removed == Color.BLACK) --blackPieces; else --whitePieces;
+			
 			/* Remove the piece being jumped ("monkey in the middle") */
 			representation[monkeyRow][monkeyCol] = null;
 		} 
@@ -355,10 +366,13 @@ public class Board {
 						(row == BOARD_SIZE - 1 && p.getColor() == Color.BLACK));
 	}
 	
+	public int getHeuristic(Color color) {
+		return color == Color.BLACK ? this.blackPieces : this.whitePieces;
+	}
+	
 	public Piece getPiece(Location location) {
 		return representation[location.row][location.column];
 	}
-
 	
 	public Piece[][] getRepresentation() {
 		return this.representation;
