@@ -198,11 +198,11 @@ public class Game {
 
 		if (color == GameConstants.THUNK_COLOR) {
 			// Maximize 
-			return Collections.min(moveScores);
+			return Collections.max(moveScores);
 		}
 		else {
 			// Minimize
-			return Collections.max(moveScores);
+			return Collections.min(moveScores);
 		}
 
 	}
