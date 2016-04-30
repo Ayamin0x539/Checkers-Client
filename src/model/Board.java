@@ -45,7 +45,9 @@ public class Board {
 		Piece[][] other_representation = other.getRepresentation();
 		for (int i = 0; i < other_representation.length; ++i) {
 			for (int j = 0; j < other_representation[0].length; ++j) {
-				this.representation[i][j] = new Piece(other_representation[i][j]);
+				if (other_representation[i][j] != null) {
+					this.representation[i][j] = new Piece(other_representation[i][j]);
+				}
 			}
 		}
 		movesSinceCapture = other.getMovesSinceCapture();
@@ -100,7 +102,12 @@ public class Board {
 			
 			/* Remove the piece being jumped ("monkey in the middle") */
 			representation[monkeyRow][monkeyCol] = null;
+			
+			this.movesSinceCapture = 0;
 		} 
+		else {
+			++this.movesSinceCapture;
+		}
 	
 		/* Place the piece in the destination cell */
 		representation[destRow][destCol] = representation[sourceRow][sourceCol];
@@ -359,11 +366,14 @@ public class Board {
 	}
 	
 	public boolean canPromote(Piece p) {
-		int row = p.getLocation().row;
 		
 		return p.getType() != Type.KING && 
-				((row == 0 && p.getColor() == Color.WHITE) || 
-						(row == BOARD_SIZE - 1 && p.getColor() == Color.BLACK));
+				isPromotionLocation(p.getLocation());
+	}
+	
+	public boolean isPromotionLocation(Location location) {
+		return (location.row == 0 || 
+				location.row == BOARD_SIZE - 1 );
 	}
 	
 	public int getHeuristic(Color color) {
@@ -387,6 +397,14 @@ public class Board {
 	}
 	public Move getLastMove() {
 		return this.lastMove;
+	}
+	
+	public int getWhitePieces() {
+		return this.whitePieces;
+	}
+	
+	public int getBlackPieces() {
+		return this.blackPieces;
 	}
 }
 

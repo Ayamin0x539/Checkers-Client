@@ -175,6 +175,10 @@ public class GamePanel extends JPanel {
 						canvas.highlightAndValidateSquare(jump.source);
 					}
 				}
+				
+				if (outOfMoves()) {
+					game.notifyClientWin();
+				}
 			}
 		}).start();
 	}
@@ -202,5 +206,9 @@ public class GamePanel extends JPanel {
 	
 	public boolean isForceJump() {
 		return !game.getAllAvailableJumpMoves(GameConstants.USER_COLOR).isEmpty();
+	}
+	
+	public boolean outOfMoves() {
+		return game.getAllAvailableMoves(GameConstants.USER_COLOR).isEmpty();
 	}
 }
