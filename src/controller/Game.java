@@ -150,7 +150,11 @@ public class Game {
 				bestMove = moveFrontier.get(i);
 				maxScore = moveScores.get(i);
 			}
+			
+			System.out.println(moveFrontier.get(i) + " --> " + moveScores.get(i));
 		}
+		
+		System.out.println("Choosing: " + bestMove);
 
 		return bestMove;
 	}
@@ -198,11 +202,11 @@ public class Game {
 
 		if (color == GameConstants.THUNK_COLOR) {
 			// Maximize 
-			return Collections.min(moveScores);
+			return Collections.max(moveScores);
 		}
 		else {
 			// Minimize
-			return Collections.max(moveScores);
+			return Collections.min(moveScores);
 		}
 
 	}
