@@ -77,7 +77,7 @@ public class GamePanel extends JPanel {
 		} else if (moveDestination == null) {
 			displayMessage("Select a destination.");
 		} else {
-			displayMessage("Press enter to confirm move.");
+			displayMessage(" ");
 		}
 	}
 
