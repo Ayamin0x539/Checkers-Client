@@ -124,8 +124,6 @@ public class Game {
 			/* Generate the frontier for all pieces */
 			boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
 			moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
-			System.out.println("Board frontier size: " + boardFrontier.size());
-			System.out.println("Move frontier size: " + moveFrontier.size());
 		}
 		
 		Color nextColor;
@@ -174,7 +172,7 @@ public class Game {
 			boardFrontier = b.generateFrontier(color);
 		}
 		
-		/* If we have reached the maximum depth or an end state for the gam */
+		/* If we have reached the maximum depth or an end state for the game */
 		if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
 				|| boardFrontier.size() == 0) {
 			Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
@@ -183,7 +181,9 @@ public class Game {
 		
 		Color nextColor;
 		/* Determine the next color to move */
-		if (GameConstants.THUNK_COLOR == Color.BLACK && !inJumpSequence) {
+		if (inJumpSequence) {
+			nextColor = color;
+		} else if (GameConstants.THUNK_COLOR == Color.BLACK) {
 			nextColor = Color.WHITE;
 		} else {
 			nextColor = Color.BLACK;
@@ -195,9 +195,7 @@ public class Game {
 		}
 
 		if (color == GameConstants.THUNK_COLOR) {
-			/* Since these scores are obtained from when it is the other 
-			 * player's turn, we want to minimize....I think
-			 */
+			// Maximize 
 			return Collections.max(moveScores);
 		}
 		else {

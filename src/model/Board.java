@@ -20,6 +20,8 @@ public class Board {
 	
 	private int blackPieces;
 	private int whitePieces;
+	private int blackKings;
+	private int whiteKings;
 
 	// Move properties
 	private int movesSinceCapture;
@@ -96,13 +98,15 @@ public class Board {
 			int monkeyRow = (destRow + sourceRow)/2;
 			int monkeyCol = (destCol + sourceCol)/2;
 	
-			Color color_removed = representation[monkeyRow][monkeyCol].getColor();
+			Piece removed = representation[monkeyRow][monkeyCol];
 			
-			if (color_removed == Color.BLACK) {
+			if (removed.getColor() == Color.BLACK) {
 				--blackPieces; 
+				if (removed.getType() == Type.KING) --blackKings;
 			}
 			else {
 				--whitePieces;
+				if (removed.getType() == Type.KING) --whiteKings;
 			}
 			
 			/* Remove the piece being jumped ("monkey in the middle") */
@@ -127,6 +131,11 @@ public class Board {
 		
 		if (canPromote(moved)) {
 			moved.promote();
+			if (moved.color == Color.BLACK) {
+				++blackKings;
+			} else {
+				++whiteKings;
+			}
 		}
 	
 		/* Update the last piece that was moved */
@@ -379,9 +388,12 @@ public class Board {
 	}
 	
 	public int getHeuristic(Color color) {
+		/* Kings are weighted more, so we count for them twice */
+		int blackHeuristic = blackPieces + blackKings;
+		int whiteHeuristic = whitePieces + whiteKings;
 		return color == Color.BLACK ? 
-				this.blackPieces - this.whitePieces : 
-					this.whitePieces - this.blackPieces;
+				(blackHeuristic - whiteHeuristic) : 
+					(whiteHeuristic - blackHeuristic);
 	}
 	
 	public Piece getPiece(Location location) {
