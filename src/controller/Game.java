@@ -42,14 +42,6 @@ public class Game {
 			gamePanel.displayMessage("It's a tie! Be more aggressive next time.");
 			// Disable UI here
 		}
-		/*
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 		
 		/* If the piece that jumped has no more jumps */
 		if (move.isJump() && getAvailableMoves(move.destination).isEmpty())
@@ -70,8 +62,8 @@ public class Game {
 				gamePanel.movePiece(thunkMove);
 
 				while (inJumpSequence) {
-					thunkMove = getThunkMove();
-					
+					thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH);
+					System.out.println("REPEATING MOVE");
 					if (thunkMove != null) {
 						if (movePromotesPiece(thunkMove)) {
 							inJumpSequence = false;
@@ -113,57 +105,68 @@ public class Game {
 		}
 	}
 	
-	public Move getMinimaxMove(int depth) {
-		ArrayList<Board> boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
-		ArrayList<Move> moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
-		ArrayList<Integer> moveScores = new ArrayList<Integer>();
-		
-		Color otherColor = GameConstants.THUNK_COLOR == Color.BLACK ? 
-				Color.WHITE : Color.BLACK;
-		// Recurse for each one here
-		for (Board board : boardFrontier) {
-			moveScores.add(this.getMinimaxScore(otherColor, board, depth));
-		}
-		
-		int maxScore = Integer.MIN_VALUE;
+	public Move getMinimaxMove(int depth, boolean currentlyIsInJumpSequence) {
+		// need to store the jump sequence at each call stack 
 		Move bestMove = null;
-		
-		for (int i = 0; i < moveScores.size(); ++i) {
-			if (moveScores.get(i) > maxScore) {
-				bestMove = moveFrontier.get(i);
-				maxScore = moveScores.get(i);
-			}
-			System.out.println("Score[" + i + "] = " + moveScores.get(i));
+		if (inJumpSequence) {
+			ArrayList<Board> boardFrontier = board.generateJumpFrontierForPiece(board.getLastPieceMoved());
+			ArrayList<Move> moveFrontier = board.generateJumpMovesForPiece(board.getLastPieceMoved());
+			ArrayList<Integer> moveScores = new ArrayList<Integer>();
+			
+			Color otherColor = 
 		}
-		System.out.println("---");
-		
+		else {
+			ArrayList<Board> boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
+			ArrayList<Move> moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
+			ArrayList<Integer> moveScores = new ArrayList<Integer>();
+			
+			Color otherColor = GameConstants.THUNK_COLOR == Color.BLACK ? 
+					Color.WHITE : Color.BLACK;
+			// Recurse for each one here
+			for (Board b : boardFrontier) {
+				moveScores.add(this.getMinimaxScore(otherColor, b, depth));
+			}
+			
+			int maxScore = Integer.MIN_VALUE;
+			
+			
+			for (int i = 0; i < moveScores.size(); ++i) {
+				if (moveScores.get(i) > maxScore) {
+					bestMove = moveFrontier.get(i);
+					maxScore = moveScores.get(i);
+				}
+			}
+		}
 		return bestMove;
 	}
 	
 	public int getMinimaxScore(Color color, Board b, int depth) {
-		if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0) {
-			Color otherColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
-			return b.getHeuristic(otherColor);
-		}
-		ArrayList<Board> boardFrontier = board.generateFrontier(color);
-		
-		ArrayList<Integer> moveScores = new ArrayList<Integer>();
-
-		for (Board board : boardFrontier) {
-			Color nextColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
-			moveScores.add(getMinimaxScore(nextColor, board, depth - 1));
-		}
-		for (int score : moveScores) {
-			System.out.println(score);
-		}
-		System.out.println("---");
-		if (color == GameConstants.THUNK_COLOR) {
-			// Maximize
-			return Collections.max(moveScores);
+		if (inJumpSequence) {
+			
 		}
 		else {
-			// Minimize
-			return Collections.min(moveScores);
+			ArrayList<Board> boardFrontier = b.generateFrontier(color);
+			if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
+					|| boardFrontier.size() == 0) {
+				Color otherColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
+				return b.getHeuristic(otherColor);
+			}
+			
+			ArrayList<Integer> moveScores = new ArrayList<Integer>();
+	
+			for (Board board : boardFrontier) {
+				Color nextColor = color == Color.BLACK ? Color.WHITE : Color.BLACK;
+				moveScores.add(getMinimaxScore(nextColor, board, depth - 1));
+			}
+	
+			if (color == GameConstants.THUNK_COLOR) {
+				// Maximize
+				return Collections.max(moveScores);
+			}
+			else {
+				// Minimize
+				return Collections.min(moveScores);
+			}
 		}
 	}
 	

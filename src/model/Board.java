@@ -53,8 +53,8 @@ public class Board {
 		movesSinceCapture = other.getMovesSinceCapture();
 		lastPieceMoved = other.getLastPieceMoved();
 		lastMove = other.getLastMove();
-		blackPieces = other.blackPieces;
-		whitePieces = other.whitePieces;
+		blackPieces = other.getBlackPieces();
+		whitePieces = other.getWhitePieces();
 	}
 
 	/**
@@ -98,7 +98,12 @@ public class Board {
 	
 			Color color_removed = representation[monkeyRow][monkeyCol].getColor();
 			
-			if (color_removed == Color.BLACK) --blackPieces; else --whitePieces;
+			if (color_removed == Color.BLACK) {
+				--blackPieces; 
+			}
+			else {
+				--whitePieces;
+			}
 			
 			/* Remove the piece being jumped ("monkey in the middle") */
 			representation[monkeyRow][monkeyCol] = null;
@@ -135,7 +140,7 @@ public class Board {
 	 */
 	public ArrayList<Board> generateFrontier(Color color) {
 		ArrayList<Board> from_jumps = generateFrontierFromJumps(color);
-		if(from_jumps.isEmpty()) {
+		if (from_jumps.isEmpty()) {
 			return generateFrontierFromRegularMoves(color);
 		}
 		return from_jumps;
@@ -229,6 +234,17 @@ public class Board {
 			}
 		}
 		return avail_moves;
+	}
+	
+	public ArrayList<Board> generateJumpFrontierForPiece(Piece p) {
+		ArrayList<Board> frontier = new ArrayList<Board>();
+		ArrayList<Move> moves = generateJumpMovesForPiece(p);
+		for (Move move : moves) {
+			Board board = new Board(this);
+			board.movePiece(move);
+			frontier.add(board);
+		}
+		return frontier;
 	}
 	
 	/**
@@ -377,7 +393,9 @@ public class Board {
 	}
 	
 	public int getHeuristic(Color color) {
-		return color == Color.BLACK ? this.blackPieces : this.whitePieces;
+		return color == Color.BLACK ? 
+				this.blackPieces - this.whitePieces : 
+					this.whitePieces - this.blackPieces;
 	}
 	
 	public Piece getPiece(Location location) {
