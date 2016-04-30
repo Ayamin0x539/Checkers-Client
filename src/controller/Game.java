@@ -20,7 +20,7 @@ public class Game {
 		this.board = board;
 		this.inJumpSequence = false;
 	}
-	
+
 	/* Either the server or the user will request a move */
 	public void requestMove(Move move) {
 
@@ -28,34 +28,34 @@ public class Game {
 		if (move.isJump() && !inJumpSequence) {
 			inJumpSequence = true;
 		}
-		
+
 		if (movePromotesPiece(move)) {
 			inJumpSequence = false;
 		}
-		
+
 		board.movePiece(move);
 		gamePanel.movePiece(move);
-		
+
 		if (board.getMovesSinceCapture() > GameConstants.MAX_PASSIVE_MOVES) {
 			gamePanel.displayMessage("It's a tie! Be more aggressive next time.");
 			// Disable UI here
 		}
-		
+
 		/* If the piece that jumped has no more jumps */
 		if (move.isJump() && getAvailableMoves(move.destination).isEmpty())
 			inJumpSequence = false;
-		
+
 		/* If the game is not in the middle of a jump sequence, move the thunk */
 		if (!inJumpSequence) {
 
 			Move thunkMove = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH, inJumpSequence);
 			if (thunkMove != null) {
 				if (thunkMove.isJump()) inJumpSequence = true;
-				
+
 				if (movePromotesPiece(thunkMove)) {
 					inJumpSequence = false;
 				}
-				
+
 				board.movePiece(thunkMove);
 				gamePanel.movePiece(thunkMove);
 
@@ -77,13 +77,13 @@ public class Game {
 			}
 		}
 	}
-	
+
 	public boolean movePromotesPiece(Move move) {
 		return board.getPiece(move.source).getType() != Type.KING &&
 				board.isPromotionLocation(move.destination);
 
 	}
-	
+
 	public Move getThunkMove() {
 		ArrayList<Move> availableMoves;
 
@@ -93,7 +93,7 @@ public class Game {
 		} else {
 			availableMoves = board.generateAllMoves(GameConstants.THUNK_COLOR);
 		}
-		
+
 		if (!availableMoves.isEmpty()) {
 			/* Just take the first move we see */
 			Move moveChoice = availableMoves.get(0);
@@ -112,7 +112,7 @@ public class Game {
 			/* Generate the frontier only for the piece that just moves */
 			boardFrontier = board.generateJumpFrontierForPiece(board.getLastPieceMoved());
 			moveFrontier = board.generateJumpMovesForPiece(board.getLastPieceMoved());
-			
+
 			/* If we can't jump anymore, we can't make a move */
 			if (boardFrontier.isEmpty()) {
 				return null;
@@ -123,7 +123,7 @@ public class Game {
 			boardFrontier = board.generateFrontier(GameConstants.THUNK_COLOR);
 			moveFrontier = board.generateAllMoves(GameConstants.THUNK_COLOR);
 		}
-		
+
 		Color nextColor;
 		/* Determine the next color to move */
 		if (inJumpSequence) {
@@ -154,39 +154,41 @@ public class Game {
 
 		return bestMove;
 	}
-	
+
 	public int getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
 		ArrayList<Board> boardFrontier;
 		ArrayList<Integer> moveScores = new ArrayList<Integer>();
-		
+		Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
+
+		if (depth == 0) {
+			return b.getHeuristic(otherColor);
+		}
+
 		if (inJumpSequence) {
 			/* Generate the frontier only for the piece that just moved */
 			boardFrontier = b.generateJumpFrontierForPiece(b.getLastPieceMoved());
-			
+
 			/* If we can't jump anymore, get out of the jump sequence */
 			if (boardFrontier.isEmpty()) {
-				inJumpSequence = false;
+				return getMinimaxScore(otherColor, b, depth-1, inJumpSequence);
 			}
 		} else {
 			/* Generate the frontier for all pieces */
 			boardFrontier = b.generateFrontier(color);
 		}
-		
+
 		/* If we have reached the maximum depth or an end state for the game */
 		if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
 				|| boardFrontier.size() == 0) {
-			Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
 			return b.getHeuristic(otherColor);
 		}
-		
+
 		Color nextColor;
 		/* Determine the next color to move */
 		if (inJumpSequence) {
 			nextColor = color;
-		} else if (GameConstants.THUNK_COLOR == Color.BLACK) {
-			nextColor = Color.WHITE;
 		} else {
-			nextColor = Color.BLACK;
+			nextColor = otherColor;
 		}
 
 		for (Board board : boardFrontier) {
@@ -204,12 +206,12 @@ public class Game {
 		}
 
 	}
-	
+
 	public void notifyClientWin() {
 		gamePanel.displayMessage("Game over. Client has won!");
 	}
 
-	
+
 	public ArrayList<Move> getAvailableMoves(Location source) {
 		if (inJumpSequence) {
 			return board.generateJumpMovesForPiece(board.getPiece(source));
@@ -217,15 +219,15 @@ public class Game {
 			return board.generateMovesForPiece(board.getPiece(source));
 		}
 	}
-	
+
 	public ArrayList<Move> getAllAvailableJumpMoves(Color player) {
 		return board.generateAllJumpMoves(player);
 	}
-	
+
 	public ArrayList<Move> getAllAvailableMoves(Color player) {
 		return board.generateAllMoves(player);
 	}
-	
+
 	public void setGamePanel(GamePanel panel) {
 		this.gamePanel = panel;
 	}
