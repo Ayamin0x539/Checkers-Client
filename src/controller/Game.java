@@ -161,7 +161,7 @@ public class Game {
 		Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
 
 		if (depth == 0) {
-			return b.getHeuristic(otherColor);
+			return b.getHeuristic(color);
 		}
 
 		if (inJumpSequence) {
@@ -178,7 +178,7 @@ public class Game {
 		}
 
 		/* If we have reached the maximum depth or an end state for the game */
-		if (depth == 0 || b.getBlackPieces() == 0 || b.getWhitePieces() == 0
+		if (b.getBlackPieces() == 0 || b.getWhitePieces() == 0
 				|| boardFrontier.size() == 0) {
 			return b.getHeuristic(otherColor);
 		}
