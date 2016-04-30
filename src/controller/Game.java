@@ -2,8 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import model.Board;
 import model.Color;
@@ -160,7 +158,7 @@ public class Game {
 		ArrayList<Integer> moveScores = new ArrayList<Integer>();
 		
 		if (inJumpSequence) {
-			/* Generate the frontier only for the piece that just moves */
+			/* Generate the frontier only for the piece that just moved */
 			boardFrontier = b.generateJumpFrontierForPiece(b.getLastPieceMoved());
 			
 			/* If we can't jump anymore, get out of the jump sequence */
@@ -196,11 +194,11 @@ public class Game {
 
 		if (color == GameConstants.THUNK_COLOR) {
 			// Maximize 
-			return Collections.max(moveScores);
+			return Collections.min(moveScores);
 		}
 		else {
 			// Minimize
-			return Collections.min(moveScores);
+			return Collections.max(moveScores);
 		}
 
 	}
