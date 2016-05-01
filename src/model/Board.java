@@ -490,17 +490,18 @@ public class Board {
 		int[] coordinates = {11,12,15,16,20,21,24,25};
 		
 		for (int value : coordinates){
+			Location piece_loc = samuelMapping(value);
+			if (isOccupied(piece_loc)==true){
 				
-			
-				Location piece_loc = samuelMapping(value);
 				Piece chosen_piece = getPiece(piece_loc);
-				if (isActive(chosen_piece)==false
-						&& chosen_piece.getType()==Type.NORMAL && chosen_piece.getColor() == color){
-					
+				if (isActive(chosen_piece)==false && chosen_piece.getType()==Type.NORMAL
+						&& chosen_piece.getColor() == color){
+					heuristicval +=1;
 				}
+			}
 		}
 		
-		return 0;
+		return heuristicval;
 	}
 	
 	/**
