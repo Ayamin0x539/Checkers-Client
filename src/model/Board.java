@@ -450,12 +450,12 @@ public class Board {
 		noKings = (color == Color.BLACK && this.blackKings == 0) ||
 					(color == Color.WHITE && this.whiteKings == 0);
 		if (piece7 != null && piece7.getColor() == color) {
-			eitherSquaresOccupiedByActiveMan |= active7;
-			neitherSquaresOccupiedByPassiveMan &= active7;
+			eitherSquaresOccupiedByActiveMan |= (active7 && piece7.getType() == Type.NORMAL);
+			neitherSquaresOccupiedByPassiveMan &= (active7 && piece7.getType() == Type.NORMAL);
 		}
 		if (piece26 != null && piece26.getColor() == color) {
-			eitherSquaresOccupiedByActiveMan |= active26;
-			neitherSquaresOccupiedByPassiveMan &= active26;
+			eitherSquaresOccupiedByActiveMan |= (active26 && piece26.getType() == Type.NORMAL);
+			neitherSquaresOccupiedByPassiveMan &= (active26 && piece26.getType() == Type.NORMAL);
 		}
 		
 		if (noKings && eitherSquaresOccupiedByActiveMan && neitherSquaresOccupiedByPassiveMan)
@@ -478,6 +478,24 @@ public class Board {
 		return 0;
 	}
 	
+	/**
+	 * The parameter is credited with 1 for each of the
+	 * following squares: 11, 12, 15, 16, 20, 21, 24, and 25
+	 * which is occupied by a passive king.
+	 * @param color
+	 * @return
+	 */
+	public int kcentHeuristic(Color color) {
+		int sum = 0;
+		int[] locations = {11, 12, 15, 16, 20, 21, 24, 25};
+		for (int k : locations) {
+			Piece p = this.getPiece(this.samuelMapping(k));
+			if (p != null && p.getType() == Type.KING && !isActive(p))
+				++sum;
+		}
+		return sum;
+	}
+	
 	public int getHeuristic(Color color) {
 		/* Kings are weighted more, so we count for them twice */
 		int heuristic = 0;
@@ -495,6 +513,9 @@ public class Board {
 		}
 		if (GameConstants.MOB) {
 			heuristic += mobHeuristic(color);
+		}
+		if (GameConstants.KCENT) {
+			heuristic += kcentHeuristic(color);
 		}
 		
 		return heuristic;

@@ -15,6 +15,7 @@ public class GameConstants {
 	public static final boolean APEX = true;
 	public static final boolean BACK = true;
 	public static final boolean CENT = true;
+	public static final boolean KCENT = true;
 	public static final boolean MOB = true;
 	public static final boolean PIECE_DIFFERENTIAL = true;
 	
