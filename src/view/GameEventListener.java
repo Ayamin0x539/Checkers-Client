@@ -35,21 +35,22 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Square square = (Square) e.getComponent();
-		if (square.hasPiece() && !gamePanel.isInJumpSequence() 
-				&& square.getPieceColor() == GameConstants.USER_COLOR
-				&& (!gamePanel.isForceJump() || (square.hasPiece()
-						&& square.isValid()))) {
-			gamePanel.dehighlightValidDestinations();
-			gamePanel.setMoveSource(square);
-			if (square.isSelected())
-				gamePanel.highlightValidDestinations(square.getCellLocation());
-			gamePanel.updateMoveMessage();
-		} else if (!square.hasPiece() && square.isValid()) {
-			gamePanel.setMoveDestination(square);
-			gamePanel.moveSelectedPiece();
-			gamePanel.updateMoveMessage();
+		if (gamePanel.isInteractionEnabled()) {
+			if (square.hasPiece() && !gamePanel.isInJumpSequence() 
+					&& square.getPieceColor() == GameConstants.USER_COLOR
+					&& (!gamePanel.isForceJump() || (square.hasPiece()
+							&& square.isValid()))) {
+				gamePanel.dehighlightValidDestinations();
+				gamePanel.setMoveSource(square);
+				if (square.isSelected())
+					gamePanel.highlightValidDestinations(square.getCellLocation());
+				gamePanel.updateMoveMessage();
+			} else if (!square.hasPiece() && square.isValid()) {
+				gamePanel.setMoveDestination(square);
+				gamePanel.moveSelectedPiece();
+				gamePanel.updateMoveMessage();
+			}
 		}
-
 	}
 
 	@Override

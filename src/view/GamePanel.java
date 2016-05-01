@@ -31,6 +31,8 @@ public class GamePanel extends JPanel {
 
 	private Square moveDestination;
 	private Square moveSource;
+	
+	private boolean interactionEnabled;
 
 
 	public GamePanel(Game game, GameEventListener gameListener) {
@@ -69,9 +71,6 @@ public class GamePanel extends JPanel {
 	}
 
 	public void updateMoveMessage() {
-//		if (moveSource == null && moveDestination == null) {
-//			displayMessage("---");
-//		} else 
 		if (moveSource == null) {
 			displayMessage("Select a piece to move.");
 		} else if (moveDestination == null) {
@@ -151,8 +150,14 @@ public class GamePanel extends JPanel {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				
+				/* Disable all user interaction before moving */
+				disableInteraction();
+				
 				/* Request the move */
 				game.requestMove(move);
+				
+				enableInteraction();
 
 				/* If the user just jumped and the game is still in a jump sequence */
 				/* Select the same piece again */
@@ -210,5 +215,18 @@ public class GamePanel extends JPanel {
 	
 	public boolean outOfMoves() {
 		return game.getAllAvailableMoves(GameConstants.USER_COLOR).isEmpty();
+	}
+
+	public void disableInteraction() {
+		this.interactionEnabled = false;
+		
+	}
+	
+	public void enableInteraction() {
+		this.interactionEnabled = true;
+	}
+
+	public boolean isInteractionEnabled() {
+		return interactionEnabled;
 	}
 }
