@@ -464,7 +464,7 @@ public class Board {
 	}
 	
 	/**
-	 * The paramter is credited with 1 if there are no 
+	 * The parameter is credited with 1 if there are no 
 	 * active kings on the board and if the two bridge
 	 * squares (1 and 3, or 30 and 32) in the back row
 	 * are occupied by passive pieces.
@@ -473,33 +473,32 @@ public class Board {
 	 * @return
 	 */
 	public int backHeuristic(Color color) {
-		for (int i = 0; i < 7;i++){ 
-			for (int j = 0; j < 7;j++){
-				if (this.representation[i][j] != null){
-					if ((this.representation[i][j].getType() == Type.KING 
-							&&  isActive(this.representation[i][j]) 
-							&& this.representation[i][j].getColor()==color)){
-						
-						return 0;
-					}
+		for (int i = 0; i < GameConstants.BOARD_SIZE; i++){ 
+			for (int j = 0; j < GameConstants.BOARD_SIZE; j++){
+				Piece piece = this.representation[i][j];
+				if (piece != null
+						&& piece.getType() == Type.KING 
+						&& piece.getColor() == color
+						&& isActive(piece)) {
+					return 0;
 				}
 			}
 		}
 		
 		
 		if (color == Color.BLACK){
-			Location thirty = samuelMapping(30);
-			Location thirty_two = samuelMapping(32);
+			Piece p30 = getPiece(samuelMapping(30));
+			Piece p32 = getPiece(samuelMapping(32));
 			
-			if ((isActive(getPiece(thirty)) == false) && (isActive(getPiece(thirty_two))==false)){
+			if (!isActive(p30) && !isActive(p32)) {
 				return 1;
 			}
 		}
 		else { // White color
-			Location one = samuelMapping(1);
-			Location three = samuelMapping(3);
+			Piece p1 = getPiece(samuelMapping(1));
+			Piece p3 = getPiece(samuelMapping(3));
 			
-			if ((isActive(getPiece(one)) == false) && (isActive(getPiece(three))==false)){
+			if (!isActive(p1) && !isActive(p3)) {
 				return 1;
 			}
 		}
