@@ -463,28 +463,59 @@ public class Board {
 		return 0;
 	}
 	
+	/**
+	 * The paramter is credited with 1 if there are no 
+	 * active kings on the board and if the two bridge
+	 * squares (1 and 3, or 30 and 32) in the back row
+	 * are occupied by passive pieces.
+	 * 
+	 * @param color
+	 * @return
+	 */
 	public int backHeuristic(Color color) {
-		if (whiteKings + blackKings == 0){
-			if (color == Color.BLACK){
-				Location thirty = samuelMapping(30);
-				Location thirty_two = samuelMapping(32);
-				
-				if ((isActive(getPiece(thirty)) == false) && (isActive(getPiece(thirty_two))==false)){
-					return 1;
-				}
-			}
-			else { // White color
-				Location one = samuelMapping(1);
-				Location three = samuelMapping(3);
-				
-				if ((isActive(getPiece(one)) == false) && (isActive(getPiece(three))==false)){
-					return 1;
+		for (int i = 0; i < 7;i++){ 
+			for (int j = 0; j < 7;j++){
+				if (this.representation[i][j] != null){
+					if ((this.representation[i][j].getType() == Type.KING 
+							&&  isActive(this.representation[i][j]) 
+							&& this.representation[i][j].getColor()==color)){
+						
+						return 0;
+					}
 				}
 			}
 		}
+		
+		
+		if (color == Color.BLACK){
+			Location thirty = samuelMapping(30);
+			Location thirty_two = samuelMapping(32);
+			
+			if ((isActive(getPiece(thirty)) == false) && (isActive(getPiece(thirty_two))==false)){
+				return 1;
+			}
+		}
+		else { // White color
+			Location one = samuelMapping(1);
+			Location three = samuelMapping(3);
+			
+			if ((isActive(getPiece(one)) == false) && (isActive(getPiece(three))==false)){
+				return 1;
+			}
+		}
+		
 		return 0;
 	}
 	
+	
+	/**
+	 * The parameter is credited with 1 for each of the
+	 * following squares: 11,12,15,16,20,21,24 and 25
+	 * which is occupied by a passive man.
+	 * 
+	 * @param color
+	 * @return
+	 */
 	public int centHeuristic(Color color) {
 		int sum = 0;
 		int[] locations = {11, 12, 15, 16, 20, 21, 24, 25};
