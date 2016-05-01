@@ -464,13 +464,44 @@ public class Board {
 	}
 	
 	public int backHeuristic(Color color) {
-		
+		if (whiteKings + blackKings == 0){
+			if (color == Color.BLACK){
+				Location thirty = samuelMapping(30);
+				Location thirty_two = samuelMapping(32);
+				
+				if ((isActive(getPiece(thirty)) == false) && (isActive(getPiece(thirty_two))==false)){
+					return 1;
+				}
+			}
+			else { // White color
+				Location one = samuelMapping(1);
+				Location three = samuelMapping(3);
+				
+				if ((isActive(getPiece(one)) == false) && (isActive(getPiece(three))==false)){
+					return 1;
+				}
+			}
+		}
 		return 0;
 	}
 	
 	public int centHeuristic(Color color) {
+		int heuristicval = 0;
+		int[] coordinates = {11,12,15,16,20,21,24,25};
 		
-		return 0;
+		for (int value : coordinates){
+			Location piece_loc = samuelMapping(value);
+			if (isOccupied(piece_loc)==true){
+				
+				Piece chosen_piece = getPiece(piece_loc);
+				if (isActive(chosen_piece)==false && chosen_piece.getType()==Type.NORMAL
+						&& chosen_piece.getColor() == color){
+					heuristicval +=1;
+				}
+			}
+		}
+		
+		return heuristicval;
 	}
 	
 	/**
