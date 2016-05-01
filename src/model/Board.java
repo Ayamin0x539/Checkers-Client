@@ -421,8 +421,47 @@ public class Board {
 		return num;
 	}
 	
+	public boolean isActive(Piece piece) {
+		ArrayList<Move> jumpFrontier = this.generateJumpMovesForPiece(piece);
+		if (piece == null) return false;
+		return jumpFrontier.size() != 0;
+	}
+	
+	/**
+	 * "The parameter is debited with 1 if there are no kings
+	 *  on the board, if either square 7 or 26 is occupied by
+	 *  an active man, and if neither of these squares is
+	 *  occupied by a passive man.
+	 * @param color
+	 * @return
+	 */
 	public int apexHeuristic(Color color) {
+		boolean noKings = false,
+				eitherSquaresOccupiedByActiveMan = false,
+				neitherSquaresOccupiedByPassiveMan = true;
+		Location square7 = this.samuelMapping(7);
+		Location square26 = this.samuelMapping(26);
+		Piece piece7 = this.getPiece(square7);
+		Piece piece26 = this.getPiece(square26);
 		
+		boolean active7 = isActive(piece7);
+		boolean active26 = isActive(piece26);
+		
+		noKings = (color == Color.BLACK && this.blackKings == 0) ||
+					(color == Color.WHITE && this.whiteKings == 0);
+		if (piece7.getColor() == color) {
+			eitherSquaresOccupiedByActiveMan |= active7;
+		}
+		if (piece26.getColor() == color) {
+			eitherSquaresOccupiedByActiveMan |= active26;
+		}
+		
+		if (piece7.getColor() == color && piece26.getColor() == color) {
+			if ()
+		}
+		
+		if (noKings && eitherSquaresOccupiedByActiveMan && neitherSquaresOccupiedByPassiveMan)
+			return -1;
 		return 0;
 	}
 	
