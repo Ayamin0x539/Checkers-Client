@@ -21,16 +21,16 @@ public class CommunicationTest {
 	/**
 	 * Input: "(0:0):(2:2):(4:0)"
 	 * 
-	 * Output: { Move( from=(0,0), to=(2,2) ), 
-	 * 			 Move( from=(2,2), to=(4,0) ) }
+	 * Output: { Move( from=(7,0), to=(5,2) ), 
+	 * 			 Move( from=(5,2), to=(3,0) ) }
 	 */
 	public void stringToMoveTest() {
 		String moveString = "(0:0):(2:2):(4:0)";
 		
 		ArrayList<Move> moves = Communication.stringToMove(moveString);
 		
-		Move move1 = new Move(new Location(0, 0), new Location(2, 2));
-		Move move2 = new Move(new Location(2, 2), new Location(4, 0));
+		Move move1 = new Move(new Location(7, 0), new Location(5, 2));
+		Move move2 = new Move(new Location(5, 2), new Location(3, 0));
 		
 		assert(moveExistsInSet(move1, moves) && moveExistsInSet(move2, moves)) : "FAILED: String --> Move";
 		
@@ -41,7 +41,7 @@ public class CommunicationTest {
 	 * Input: { Move( from=(0,0), to=(2,2) ), 
 	 * 			 Move( from=(2,2), to=(4,0) ) }
 	 * 
-	 * Output: "(0:0):(2:2):(4:0)"
+	 * Output: "(7:0):(5:2):(3:0)"
 	 */
 	public void moveToStringTest() {
 		ArrayList<Move> moves = new ArrayList<Move>();
@@ -52,7 +52,7 @@ public class CommunicationTest {
 		
 		String moveString = Communication.moveToString(moves);
 		
-		assert(moveString.equals("(0:0):(2:2):(4:0)")) : "PASSED: Move --> String";
+		assert(moveString.equals("(7:0):(5:2):(3:0)")) : "PASSED: Move --> String";
 		
 		System.out.println("PASSED: Move --> String");
 	}

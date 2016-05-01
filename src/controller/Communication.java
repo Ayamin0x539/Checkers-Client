@@ -35,8 +35,8 @@ public class Communication {
 		ArrayList<Move> moves = new ArrayList<Move>();
 		
 		for (int i = 0; i < moveIndexes.size() - 3; i+=2) {
-			Location from = new Location(moveIndexes.get(i), moveIndexes.get(i+1));
-			Location to = new Location(moveIndexes.get(i+2), moveIndexes.get(i+3));
+			Location from = new Location(GameConstants.BOARD_SIZE - 1 - moveIndexes.get(i), moveIndexes.get(i+1));
+			Location to = new Location(GameConstants.BOARD_SIZE - 1 - moveIndexes.get(i+2), moveIndexes.get(i+3));
 			Move move = new Move(from, to);
 			moves.add(move);
 		}
@@ -57,18 +57,18 @@ public class Communication {
 		
 		Move firstmove = moves.get(0);
 		sb.append("(");
-		sb.append(firstmove.source.row);
+		sb.append(GameConstants.BOARD_SIZE - 1 - firstmove.source.row);
 		sb.append(":");
 		sb.append(firstmove.source.column);
 		sb.append("):(");
-		sb.append(firstmove.destination.row);
+		sb.append(GameConstants.BOARD_SIZE - 1 - firstmove.destination.row);
 		sb.append(":");
 		sb.append(firstmove.destination.column);
 		sb.append(")");
 		for (int i = 1; i < moves.size(); ++i) {
 			Move move = moves.get(i);
 			sb.append(":(");
-			sb.append(move.destination.row);
+			sb.append(GameConstants.BOARD_SIZE - 1 - move.destination.row);
 			sb.append(":");
 			sb.append(move.destination.column);
 			sb.append(")");
