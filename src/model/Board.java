@@ -466,11 +466,30 @@ public class Board {
 	}
 	
 	public int backHeuristic(Color color) {
-		
+		if (whiteKings + blackKings == 0){
+			if (color == Color.BLACK){
+				Location thirty = samuelMapping(30);
+				Location thirty_two = samuelMapping(32);
+				
+				if ((isActive(getPiece(thirty)) == false) && (isActive(getPiece(thirty_two))==false)){
+					return 1;
+				}
+			}
+			else { // White color
+				Location one = samuelMapping(1);
+				Location three = samuelMapping(3);
+				
+				if ((isActive(getPiece(one)) == false) && (isActive(getPiece(three))==false)){
+					return 1;
+				}
+			}
+		}
 		return 0;
 	}
 	
 	public int centHeuristic(Color color) {
+		
+		int[] coordinates = 
 		
 		return 0;
 	}
