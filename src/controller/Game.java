@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
 
 import model.Board;
 import model.Color;
@@ -78,13 +79,13 @@ public class Game {
 		}
 	}
 
-	public boolean movePromotesPiece(Move move) {
+	private boolean movePromotesPiece(Move move) {
 		return board.getPiece(move.source).getType() != Type.KING &&
 				board.isPromotionLocation(move.destination);
 
 	}
 
-	public Move getThunkMove() {
+	private Move getThunkMove() {
 		ArrayList<Move> availableMoves;
 
 		if (inJumpSequence) {
@@ -103,7 +104,7 @@ public class Game {
 		}
 	}
 
-	public Move getMinimaxMove(int depth, boolean inJumpSequence) {
+	private Move getMinimaxMove(int depth, boolean inJumpSequence) {
 		ArrayList<Board> boardFrontier = null;
 		ArrayList<Move> moveFrontier = null;
 		ArrayList<Integer> moveScores = new ArrayList<Integer>();
@@ -154,12 +155,16 @@ public class Game {
 			System.out.println(moveFrontier.get(i) + " --> " + moveScores.get(i));
 		}
 		
+		/* All moves have the same outcome */
+		if (!moveScores.isEmpty() && maxScore == Collections.min(moveScores)) {
+			return getBestOfSimilarMoves(moveFrontier);
+		}
 		System.out.println("Choosing: " + bestMove);
 
 		return bestMove;
 	}
 
-	public int getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
+	private int getMinimaxScore(Color color, Board b, int depth, boolean inJumpSequence) {
 		ArrayList<Board> boardFrontier;
 		ArrayList<Integer> moveScores = new ArrayList<Integer>();
 		Color otherColor = (color == Color.BLACK ? Color.WHITE : Color.BLACK);
@@ -209,6 +214,25 @@ public class Game {
 			return Collections.min(moveScores);
 		}
 
+	}
+	
+	private Move getBestOfSimilarMoves(ArrayList<Move> moves) {
+		ArrayList<Move> regularMoves = new ArrayList<Move>();
+		
+		for (Move move : moves) {
+			if (!move.isJump()) {
+				regularMoves.add(move);
+			}
+		}
+		
+		/* We prefer to advance regular checkers over kings
+		 * if all moves have the same outcome
+		 */
+		if (!regularMoves.isEmpty()) {
+			return regularMoves.get(ThreadLocalRandom.current().nextInt(regularMoves.size()));
+		}
+		
+		return moves.get(ThreadLocalRandom.current().nextInt(moves.size()));
 	}
 
 	public void notifyClientWin() {
