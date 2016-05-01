@@ -44,7 +44,7 @@ public class GameEventListener implements MouseListener, KeyListener, ActionList
 			if (square.isSelected())
 				gamePanel.highlightValidDestinations(square.getCellLocation());
 			gamePanel.updateMoveMessage();
-		} else if (square.isValid()) {
+		} else if (!square.hasPiece() && square.isValid()) {
 			gamePanel.setMoveDestination(square);
 			gamePanel.moveSelectedPiece();
 			gamePanel.updateMoveMessage();
