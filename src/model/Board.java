@@ -384,6 +384,11 @@ public class Board {
 				isPromotionLocation(p.getLocation());
 	}
 	
+	public boolean movePromotesPiece(Move move) {
+		return getPiece(move.source).getType() != Type.KING &&
+				isPromotionLocation(move.destination);
+	}
+	
 	public boolean isPromotionLocation(Location location) {
 		return (location.row == 0 || 
 				location.row == BOARD_SIZE - 1 );

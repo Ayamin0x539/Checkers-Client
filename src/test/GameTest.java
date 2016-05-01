@@ -7,6 +7,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import controller.Game;
 import controller.GameConstants;
 import model.Board;
+import player.ComputerPlayer;
+import player.HumanPlayer;
 import view.CheckersWindow;
 
 public class GameTest {
@@ -32,13 +34,18 @@ public class GameTest {
 			// handle exception
 		}
 		Board board = new Board();
-		
 		final Game game = new Game(board);
+		
+		ComputerPlayer computer = new ComputerPlayer(GameConstants.THUNK_COLOR, board);
+		final HumanPlayer user = new HumanPlayer(GameConstants.USER_COLOR, board, game);
+		
+		game.setComputer(computer);
+		game.setOpponent(user);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				CheckersWindow window = new CheckersWindow(game, GameConstants.USER_MODE);
+				CheckersWindow window = new CheckersWindow(game, user, GameConstants.USER_MODE);
 				window.open();
 			}
 		});

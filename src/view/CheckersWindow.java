@@ -9,6 +9,7 @@ import javax.swing.JMenuItem;
 
 import controller.Game;
 import controller.GameConstants;
+import player.HumanPlayer;
 
 /**
  * Represents the JFrame window that will hold the graphical components
@@ -35,7 +36,7 @@ public class CheckersWindow extends JFrame {
 	private GameEventListener gameListener;
 	
 	
-	public CheckersWindow(Game game, int mode) {
+	public CheckersWindow(Game game, HumanPlayer user, int mode) {
 		super("Checkers");
 		this.setSize(WIDTH, HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -45,7 +46,7 @@ public class CheckersWindow extends JFrame {
 		/* MUST be done in this order */
 		this.initGameListener();
 		this.createMenuBar();
-		this.initGamePanel(game, mode);
+		this.initGamePanel(game, user, mode);
 		this.pack();
 	}
 	
@@ -100,8 +101,8 @@ public class CheckersWindow extends JFrame {
 	/**
 	 * Initializes the {@link GamePanel} instance 
 	 */
-	private void initGamePanel(Game game, int mode) {
-		this.gamePanel = new GamePanel(game, gameListener);
+	private void initGamePanel(Game game, HumanPlayer user, int mode) {
+		this.gamePanel = new GamePanel(game, user, gameListener);
 		if (mode == GameConstants.SERVER_MODE) {
 			gamePanel.disableInteraction();
 		} else {

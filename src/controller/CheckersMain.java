@@ -6,6 +6,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import model.Board;
+import player.ComputerPlayer;
+import player.HumanPlayer;
+import player.ServerPlayer;
 import view.CheckersWindow;
 
 public class CheckersMain {
@@ -41,19 +44,35 @@ public class CheckersMain {
 		catch (IllegalAccessException e) {
 			// handle exception
 		}
-		
+
 		Board board = new Board();
 
 		final Game game = new Game(board);
 
+		ComputerPlayer computer = new ComputerPlayer(GameConstants.THUNK_COLOR, board);
+		final HumanPlayer user = new HumanPlayer(GameConstants.USER_COLOR, board, game);
+
+		game.setComputer(computer);
+
 		if (mode == GameConstants.SERVER_MODE) {
-			/* Create a ServerListener to listen for messages from the server */
+			final ServerPlayer server = new ServerPlayer(GameConstants.SERVER_COLOR, board, game);
+			game.setOpponent(server);
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					server.listen();
+				}
+
+			}).start();
+		} else {
+			game.setOpponent(user);
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				CheckersWindow window = new CheckersWindow(game, mode);
+				CheckersWindow window = new CheckersWindow(game, user, mode);
 				window.open();
 			}
 		});

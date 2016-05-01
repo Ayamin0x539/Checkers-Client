@@ -12,6 +12,7 @@ import controller.GameConstants;
 import model.Color;
 import model.Location;
 import model.Move;
+import player.HumanPlayer;
 
 
 /**
@@ -24,6 +25,7 @@ import model.Move;
 public class GamePanel extends JPanel {
 	
 	private Game game;
+	private HumanPlayer user;
 	
 	private JLabel messageBar;
 	private CheckersCanvas canvas;
@@ -35,10 +37,11 @@ public class GamePanel extends JPanel {
 	private boolean interactionEnabled;
 
 
-	public GamePanel(Game game, GameEventListener gameListener) {
+	public GamePanel(Game game, HumanPlayer user, GameEventListener gameListener) {
 		super(new GridBagLayout());
 		
 		this.game = game;
+		this.user = user;
 		
 		/* Initialize the layout manager */
 		this.layoutConstraints = new GridBagConstraints();
@@ -111,7 +114,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public void highlightValidDestinations(Location source) {
-		ArrayList<Move> availMoves = game.getAvailableMoves(source);
+		ArrayList<Move> availMoves = user.getAvailableMoves(source);
 		
 		for (Move move : availMoves) {
 			canvas.highlightAndValidateSquare(move.destination);
@@ -154,14 +157,14 @@ public class GamePanel extends JPanel {
 				/* Disable all user interaction before moving */
 				disableInteraction();
 				
-				/* Request the move */
-				game.requestMove(move);
+				/* Make the move */
+				user.makeMove(move);
 				
 				enableInteraction();
 
 				/* If the user just jumped and the game is still in a jump sequence */
 				/* Select the same piece again */
-				if (move.isJump() && game.isInJumpSequence()) {
+				if (move.isJump() && user.isInJumpSequence()) {
 					moveDestination.setSelected(true);
 					highlightValidDestinations(moveDestination.getCellLocation());
 					moveSource = moveDestination;
@@ -173,7 +176,7 @@ public class GamePanel extends JPanel {
 
 				/* See if any jump moves are available */
 				ArrayList<Move> jumpMoves = 
-						game.getAllAvailableJumpMoves(GameConstants.USER_COLOR);
+						user.getAllAvailableJumpMoves();
 
 				if (!jumpMoves.isEmpty()) {
 					for (Move jump : jumpMoves) {
@@ -204,17 +207,16 @@ public class GamePanel extends JPanel {
 						square.getPieceColor() == Color.BLACK));
 	}
 	
-
 	public boolean isInJumpSequence() {
-		return game.isInJumpSequence();
+		return user.isInJumpSequence();
 	}
 	
 	public boolean isForceJump() {
-		return !game.getAllAvailableJumpMoves(GameConstants.USER_COLOR).isEmpty();
+		return !user.getAllAvailableJumpMoves().isEmpty();
 	}
 	
 	public boolean outOfMoves() {
-		return game.getAllAvailableMoves(GameConstants.USER_COLOR).isEmpty();
+		return user.getAllAvailableMoves().isEmpty();
 	}
 
 	public void disableInteraction() {
