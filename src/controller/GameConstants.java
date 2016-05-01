@@ -17,6 +17,7 @@ public class GameConstants {
 	public static final boolean CENT = true;
 	public static final boolean KCENT = true;
 	public static final boolean MOB = true;
+	public static final boolean POLE = true;
 	public static final boolean PIECE_DIFFERENTIAL = true;
 	
 	/* Heuristic parameter weights */
@@ -25,6 +26,7 @@ public class GameConstants {
 	public static final int CENT_WEIGHT = 2;
 	public static final int KCENT_WEIGHT = 2;
 	public static final int MOB_WEIGHT = 1;
-	public static final int PIECE_DIFFERENTIAL_WEIGHT = 2;
+	public static final int POLE_WEIGHT = 2;
+	public static final int PIECE_DIFFERENTIAL_WEIGHT = 3;
 	
 }

@@ -410,9 +410,9 @@ public class Board {
 		int row = piece.getLocation().row;
 		int col = piece.getLocation().column;
 		boolean up = row > 0,
-				down = row < GameConstants.BOARD_SIZE,
+				down = row < GameConstants.BOARD_SIZE - 1,
 				left = col > 0,
-				right = row < GameConstants.BOARD_SIZE;
+				right = col < GameConstants.BOARD_SIZE - 1;
 		if (up && left && this.representation[row-1][col-1] == null) ++num;
 		if (up && right && this.representation[row-1][col+1] == null) ++num;
 		if (down && left && this.representation[row+1][col-1] == null) ++num;
@@ -504,6 +504,30 @@ public class Board {
 		return sum;
 	}
 	
+	/**
+	 * "The parameter is credited with 1 for
+	 * each passive man that is completely 
+	 * surrounded by empty squares."
+	 * @param color
+	 * @return
+	 */
+	public int poleHeuristic(Color color) {
+		int sum = 0;
+		for (int i = 0; i < GameConstants.BOARD_SIZE; ++i) {
+			for (int j = 0; j < GameConstants.BOARD_SIZE; ++j) {
+				Piece p = this.representation[i][j];
+				if (p != null) {
+					if (p.getType() == Type.NORMAL &&
+							!isActive(p) &&
+							emptySquaresSurrounding(p) == 4) {
+						++sum;
+					}
+				}
+			}
+		}
+		return sum;
+	}
+	
 	public int getHeuristic(Color color) {
 		/* Kings are weighted more, so we count for them twice */
 		int heuristic = 0;
@@ -521,6 +545,9 @@ public class Board {
 		}
 		if (GameConstants.MOB) {
 			heuristic += mobHeuristic(color)*GameConstants.MOB_WEIGHT;
+		}
+		if (GameConstants.POLE) {
+			heuristic += poleHeuristic(color)*GameConstants.POLE_WEIGHT;
 		}
 		if (GameConstants.KCENT) {
 			heuristic += kcentHeuristic(color)*GameConstants.KCENT_WEIGHT;
