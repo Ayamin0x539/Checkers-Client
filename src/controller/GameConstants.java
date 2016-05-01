@@ -27,6 +27,6 @@ public class GameConstants {
 	public static final int KCENT_WEIGHT = 2;
 	public static final int MOB_WEIGHT = 1;
 	public static final int POLE_WEIGHT = 2;
-	public static final int PIECE_DIFFERENTIAL_WEIGHT = 3;
+	public static final int PIECE_DIFFERENTIAL_WEIGHT = 5;
 	
 }
