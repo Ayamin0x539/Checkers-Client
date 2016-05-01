@@ -13,10 +13,16 @@ public class BoardTest {
 		Board b = new Board();
 		b.print();
 	}
+	
+	public static void samuelMappingTest() {
+		Board b = new Board();
+		for(int i = 1; i <= 32; ++i) {
+			System.out.println(i + " : " + b.samuelMapping(i));
+		}
+	}
 
 	public static void main(String[]args) {
-		printTest();
-		movementTest();
+		samuelMappingTest();
 	}
 }
 

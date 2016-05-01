@@ -397,6 +397,30 @@ public class Board {
 					(whiteHeuristic - blackHeuristic));
 	}
 	
+	public Location samuelMapping(int k) {
+		int augmented = (32 - k) * 2;
+		int row = augmented / GameConstants.BOARD_SIZE;
+		int col = augmented % GameConstants.BOARD_SIZE;
+		if (row % 2 == 0) ++col;
+		return new Location(row, col);
+	}
+	
+	public int emptySquaresSurrounding(Piece piece) {
+		int num = 0;
+		int row = piece.getLocation().row;
+		int col = piece.getLocation().column;
+		boolean up = row > 0,
+				down = row < GameConstants.BOARD_SIZE,
+				left = col > 0,
+				right = row < GameConstants.BOARD_SIZE;
+		if (up && left && this.representation[row-1][col-1] == null) ++num;
+		if (up && right && this.representation[row-1][col+1] == null) ++num;
+		if (down && left && this.representation[row+1][col-1] == null) ++num;
+		if (down && right && this.representation[row+1][col+1] == null) ++num;
+		
+		return num;
+	}
+	
 	public int apexHeuristic(Color color) {
 		
 		return 0;
