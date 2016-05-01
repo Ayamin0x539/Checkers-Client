@@ -486,8 +486,19 @@ public class Board {
 	}
 	
 	public int centHeuristic(Color color) {
+		int heuristicval = 0;
+		int[] coordinates = {11,12,15,16,20,21,24,25};
 		
-		int[] coordinates = 
+		for (int value : coordinates){
+				
+			
+				Location piece_loc = samuelMapping(value);
+				Piece chosen_piece = getPiece(piece_loc);
+				if (isActive(chosen_piece)==false
+						&& chosen_piece.getType()==Type.NORMAL && chosen_piece.getColor() == color){
+					
+				}
+		}
 		
 		return 0;
 	}
