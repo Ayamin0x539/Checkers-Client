@@ -82,7 +82,6 @@ public class Game {
 	private boolean movePromotesPiece(Move move) {
 		return board.getPiece(move.source).getType() != Type.KING &&
 				board.isPromotionLocation(move.destination);
-
 	}
 
 	private Move getThunkMove() {
