@@ -422,8 +422,8 @@ public class Board {
 	}
 	
 	public boolean isActive(Piece piece) {
-		ArrayList<Move> jumpFrontier = this.generateJumpMovesForPiece(piece);
 		if (piece == null) return false;
+		ArrayList<Move> jumpFrontier = this.generateJumpMovesForPiece(piece);
 		return jumpFrontier.size() != 0;
 	}
 	
@@ -473,15 +473,23 @@ public class Board {
 		return 0;
 	}
 	
+	/**
+	 * "The parameter is credited with 1 for each square
+	 * to which the active side could move one or more pieces in
+	 * the normal fashion, disregarding the fact that jump moves
+	 * may or may not be available.
+	 * @param color
+	 * @return
+	 */
 	public int mobHeuristic(Color color) {
-		
-		return 0;
+		ArrayList<Move> moves = this.generateAllMoves(color);
+		return moves.size();
 	}
 	
 	/**
-	 * The parameter is credited with 1 for each of the
+	 * "The parameter is credited with 1 for each of the
 	 * following squares: 11, 12, 15, 16, 20, 21, 24, and 25
-	 * which is occupied by a passive king.
+	 * which is occupied by a passive king."
 	 * @param color
 	 * @return
 	 */
@@ -500,22 +508,22 @@ public class Board {
 		/* Kings are weighted more, so we count for them twice */
 		int heuristic = 0;
 		if (GameConstants.PIECE_DIFFERENTIAL) {
-			heuristic += pieceDifferentialHeuristic(color);
+			heuristic += pieceDifferentialHeuristic(color)*GameConstants.PIECE_DIFFERENTIAL_WEIGHT;
 		}
 		if (GameConstants.APEX) {
-			heuristic += apexHeuristic(color);
+			heuristic += apexHeuristic(color)*GameConstants.APEX_WEIGHT;
 		}
 		if (GameConstants.BACK) {
-			heuristic += backHeuristic(color);
+			heuristic += backHeuristic(color)*GameConstants.BACK_WEIGHT;
 		}
 		if (GameConstants.CENT) {
-			heuristic += centHeuristic(color);
+			heuristic += centHeuristic(color)*GameConstants.CENT_WEIGHT;
 		}
 		if (GameConstants.MOB) {
-			heuristic += mobHeuristic(color);
+			heuristic += mobHeuristic(color)*GameConstants.MOB_WEIGHT;
 		}
 		if (GameConstants.KCENT) {
-			heuristic += kcentHeuristic(color);
+			heuristic += kcentHeuristic(color)*GameConstants.KCENT_WEIGHT;
 		}
 		
 		return heuristic;
