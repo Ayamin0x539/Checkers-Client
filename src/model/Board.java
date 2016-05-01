@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import controller.GameConstants;
+
 /**
  * The representation is a 8x8 grid where
  * A[row][col] marks the position of the checker piece.
@@ -387,14 +389,54 @@ public class Board {
 				location.row == BOARD_SIZE - 1 );
 	}
 	
-	public int getHeuristic(Color color) {
-		/* Kings are weighted more, so we count for them twice */
-
+	public int pieceDifferentialHeuristic(Color color) {
 		int blackHeuristic = blackPieces + blackKings;
 		int whiteHeuristic = whitePieces + whiteKings;
 		return - (color == Color.BLACK ? 
 				(blackHeuristic - whiteHeuristic) : 
 					(whiteHeuristic - blackHeuristic));
+	}
+	
+	public int apexHeuristic(Color color) {
+		
+		return 0;
+	}
+	
+	public int backHeuristic(Color color) {
+		
+		return 0;
+	}
+	
+	public int centHeuristic(Color color) {
+		
+		return 0;
+	}
+	
+	public int mobHeuristic(Color color) {
+		
+		return 0;
+	}
+	
+	public int getHeuristic(Color color) {
+		/* Kings are weighted more, so we count for them twice */
+		int heuristic = 0;
+		if (GameConstants.PIECE_DIFFERENTIAL) {
+			heuristic += pieceDifferentialHeuristic(color);
+		}
+		if (GameConstants.APEX) {
+			heuristic += apexHeuristic(color);
+		}
+		if (GameConstants.BACK) {
+			heuristic += backHeuristic(color);
+		}
+		if (GameConstants.CENT) {
+			heuristic += centHeuristic(color);
+		}
+		if (GameConstants.MOB) {
+			heuristic += mobHeuristic(color);
+		}
+		
+		return heuristic;
 	}
 	
 	public Piece getPiece(Location location) {
