@@ -486,22 +486,15 @@ public class Board {
 	}
 	
 	public int centHeuristic(Color color) {
-		int heuristicval = 0;
-		int[] coordinates = {11,12,15,16,20,21,24,25};
-		
-		for (int value : coordinates){
-			Location piece_loc = samuelMapping(value);
-			if (isOccupied(piece_loc)==true){
-				
-				Piece chosen_piece = getPiece(piece_loc);
-				if (isActive(chosen_piece)==false && chosen_piece.getType()==Type.NORMAL
-						&& chosen_piece.getColor() == color){
-					heuristicval +=1;
-				}
-			}
+		int sum = 0;
+		int[] locations = {11, 12, 15, 16, 20, 21, 24, 25};
+		for (int k : locations) {
+			Piece p = this.getPiece(this.samuelMapping(k));
+			if (p != null && p.getColor() == color && 
+					p.getType() == Type.NORMAL && !isActive(p))
+				++sum;
 		}
-		
-		return heuristicval;
+		return sum;
 	}
 	
 	/**
@@ -529,7 +522,8 @@ public class Board {
 		int[] locations = {11, 12, 15, 16, 20, 21, 24, 25};
 		for (int k : locations) {
 			Piece p = this.getPiece(this.samuelMapping(k));
-			if (p != null && p.getType() == Type.KING && !isActive(p))
+			if (p != null && p.getColor() == color 
+					&& p.getType() == Type.KING && !isActive(p))
 				++sum;
 		}
 		return sum;
