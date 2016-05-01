@@ -449,15 +449,13 @@ public class Board {
 		
 		noKings = (color == Color.BLACK && this.blackKings == 0) ||
 					(color == Color.WHITE && this.whiteKings == 0);
-		if (piece7.getColor() == color) {
+		if (piece7 != null && piece7.getColor() == color) {
 			eitherSquaresOccupiedByActiveMan |= active7;
+			neitherSquaresOccupiedByPassiveMan &= active7;
 		}
-		if (piece26.getColor() == color) {
+		if (piece26 != null && piece26.getColor() == color) {
 			eitherSquaresOccupiedByActiveMan |= active26;
-		}
-		
-		if (piece7.getColor() == color && piece26.getColor() == color) {
-			if ()
+			neitherSquaresOccupiedByPassiveMan &= active26;
 		}
 		
 		if (noKings && eitherSquaresOccupiedByActiveMan && neitherSquaresOccupiedByPassiveMan)
