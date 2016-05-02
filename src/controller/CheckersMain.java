@@ -61,7 +61,7 @@ public class CheckersMain {
 
 				@Override
 				public void run() {
-					server.listen();
+					server.listen("1", "010101", "2");
 				}
 
 			}).start();

@@ -18,6 +18,12 @@ public class Player {
 		this.inJumpSequence = false;
 	}
 	
+	//Sorry that I had to make this, it's needed to make life easier on 
+	//The server side
+	public void setColor(Color newColor){
+		this.color = newColor;
+	}
+	
 	public boolean isInJumpSequence() {
 		return inJumpSequence;
 	}

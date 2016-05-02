@@ -1,35 +1,36 @@
 package player;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import controller.Game;
 import model.Board;
 import model.Color;
 import model.Move;
+import controller.Communication;
 
 public class ServerPlayer extends Player {
 	private Game game;
+	private static String IP = "137.99.164.83";
+	private static int PORT = 3499;
+	private Socket _socket = null;
+    private PrintWriter _out = null;
+    private BufferedReader _in = null;
 	
 	public ServerPlayer(Color color, Board board, Game game) {
 		super(color, board);
 		this.game = game;
 	}
 	
-	public ArrayList<Move> makeMove(Move move) {
-		/* If this is the first jump of the jump sequence */
-		if (move.isJump() && !inJumpSequence) {
-			inJumpSequence = true;
-		}
-
-		if (board.movePromotesPiece(move)) {
-			inJumpSequence = false;
-		}
-		
-		/* Request to move the piece */
-		game.requestMove(move);
-		
-		if(getAvailableMoves(move.destination).isEmpty()) {
-			inJumpSequence = false;
+	public ArrayList<Move> makeMove(ArrayList<Move> moves) {
+		//Does full sequence of moves, then computer responds. This might cause bugs
+		for (Move move : moves){
+			game.requestMove(move);
 		}
 		
 		ArrayList<Move> computerMoves = new ArrayList<Move>();
@@ -37,14 +38,14 @@ public class ServerPlayer extends Player {
 		/* Make the computer move */
 		Move computerMove = game.makeComputerMove();
 		
-		if (move != null) {
+		if (moves != null) {
 			computerMoves.add(computerMove);
 		}
 		
 		/* While the computer can still move, ask it to move */
 		while (game.getComputer().isInJumpSequence()) {
 			computerMove = game.makeComputerMove();
-			if (move != null) {
+			if (moves != null) {
 				computerMoves.add(computerMove);
 			}
 		}
@@ -53,16 +54,59 @@ public class ServerPlayer extends Player {
 		return computerMoves;
 	}
 	
-	public void listen() {
-		/* Test code */
-		while(true) {
-			System.out.println("Listening");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public void listen(String name, String pass, String opponent) {
+		_socket = openSocket();
+		ArrayList<Move> moves;
+		ArrayList<Move> computerMoves;
+		try{
+			readAndEcho(); //Start message
+			readAndEcho(); //User query
+			writeMessageAndEcho(name); //Send Username
+			readAndEcho(); //Password query
+			writeMessageAndEcho(pass); //Send Password
+			readAndEcho(); //Opponent query
+			writeMessageAndEcho(opponent); //Send opponent
+			System.out.println("Waiting on opponent: " + opponent);
+			String gameID = (readAndEcho().substring(5,9)); //Game ID
+			String selectedColor = readAndEcho().substring(6,11); //Color
+			System.out.println("I am playing as "+color+" in game number "+ gameID);
+			if (selectedColor.equalsIgnoreCase("white")){ //Change colors accordingly
+				this.setColor(color.BLACK); //Almost caused a bug here. whoops!
+				game.getComputer().setColor(color.WHITE);
+				//Proceed to main loop
 			}
+			else{
+				this.setColor(color.WHITE);
+				game.getComputer().setColor(color.BLACK);
+				computerMoves = makeMove(null); //Act first, probably won't work now
+				String moveString = Communication.moveToString(computerMoves); //Put move into string
+				readAndEcho(); //Read move query
+				writeMessageAndEcho(moveString); //Send move string
+				readAndEcho();
+			}
+								
+			boolean over = false;
+			//Main execution loop, stops when someone wins. Will probably need to write in a Tie recognizer
+			//Because the AI likes to dance in the corner
+			while(!over) { //While game isn't over
+				String moveMsg = readAndEcho(); //Move query or result
+				if (moveMsg.contains("Result")){
+					over = true; //Cut it if it's result
+				}
+				else {
+					moves = Communication.stringToMove(moveMsg); //Otherwise update board
+					computerMoves = makeMove(moves);			 //Make moves and computer moves
+					String moveString = Communication.moveToString(computerMoves);
+					readAndEcho(); //Read move query
+					writeMessageAndEcho(moveString); //Send moves
+					readAndEcho(); //Read the move echo'd back
+				}
+					
+			}
+		}
+		catch (Exception e){
+			System.out.println("Exception occured:\n" + e);
+			System.exit(1);
 		}
 		/* Listen to server and wait for incoming messages.
 		 * and GameConstants.SERVER_COLOR according to who the server says
@@ -82,4 +126,40 @@ public class ServerPlayer extends Player {
 		 * the string to send to the server;
 		 */
 	}
+
+    public String readAndEcho() throws IOException
+    {
+    	String readMessage = _in.readLine();
+    	System.out.println("read: "+readMessage);
+    	return readMessage;
+    }
+
+    public void writeMessage(String message) throws IOException
+    {
+    	_out.print(message+"\r\n");  
+    	_out.flush();
+    }
+ 
+    public void writeMessageAndEcho(String message) throws IOException
+    {
+    	_out.print(message+"\r\n");  
+    	_out.flush();
+    	System.out.println("sent: "+ message);
+    }
+			       
+    public  Socket openSocket(){
+	//Create socket connection, adapted from Sun example
+	try{
+		_socket = new Socket(IP, PORT);
+		_out = new PrintWriter(_socket.getOutputStream(), true);
+		_in = new BufferedReader(new InputStreamReader(_socket.getInputStream()));
+     } catch (UnknownHostException e) {
+    	 System.out.println("Unknown host: " + IP);
+    	 System.exit(1);
+     } catch  (IOException e) {
+    	 System.out.println("No I/O");
+    	 System.exit(1);
+     }
+     return _socket;
+  }
 }
