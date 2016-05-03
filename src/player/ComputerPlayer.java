@@ -100,6 +100,7 @@ public class ComputerPlayer extends Player {
 			boardFrontier = b.generateJumpFrontierForPiece(b.getLastPieceMoved());
 			/* If we can't jump anymore, get out of the jump sequence */
 			if (boardFrontier.isEmpty()) {
+				inJumpSequence = false;
 				return getMinimaxScore(otherColor, b, depth-1, inJumpSequence);
 			}
 		} else {
@@ -127,12 +128,12 @@ public class ComputerPlayer extends Player {
 		}
 
 		if (color == GameConstants.THUNK_COLOR) {
-			// Maximize 
-			return Collections.max(moveScores);
+			// Minimize over the opponent's scores
+			return Collections.min(moveScores);
 		}
 		else {
-			// Minimize
-			return Collections.min(moveScores);
+			// Assume the opponent maximizes their score.
+			return Collections.max(moveScores);
 		}
 
 	}
