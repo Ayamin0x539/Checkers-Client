@@ -397,9 +397,9 @@ public class Board {
 	public int pieceDifferentialHeuristic(Color color) {
 		int blackHeuristic = blackPieces + blackKings;
 		int whiteHeuristic = whitePieces + whiteKings;
-		return - (color == Color.BLACK ? 
+		return (color == Color.BLACK ? 
 				(blackHeuristic - whiteHeuristic) : 
-					(whiteHeuristic - blackHeuristic));
+					(whiteHeuristic));
 	}
 	
 	public Location samuelMapping(int k) {

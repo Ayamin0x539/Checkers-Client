@@ -94,11 +94,10 @@ public class ComputerPlayer extends Player {
 		if (depth == 0) {
 			return b.getHeuristic(otherColor);
 		}
-
+		
 		if (inJumpSequence) {
 			/* Generate the frontier only for the piece that just moved */
 			boardFrontier = b.generateJumpFrontierForPiece(b.getLastPieceMoved());
-
 			/* If we can't jump anymore, get out of the jump sequence */
 			if (boardFrontier.isEmpty()) {
 				return getMinimaxScore(otherColor, b, depth-1, inJumpSequence);
