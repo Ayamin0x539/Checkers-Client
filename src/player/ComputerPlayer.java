@@ -20,8 +20,10 @@ public class ComputerPlayer extends Player {
 		Move move = getMinimaxMove(GameConstants.MAX_SEARCH_DEPTH, inJumpSequence);
 		if (move == null) {
 			inJumpSequence = false;
-		}else if (board.movePromotesPiece(move)) {
+		} else if (board.movePromotesPiece(move)) {
 			inJumpSequence = false;
+		} else if (move.isJump()) {
+			inJumpSequence = true;
 		}
 		return move;
 	}
