@@ -398,7 +398,7 @@ public class Board {
 		int blackHeuristic = blackPieces + blackKings;
 		int whiteHeuristic = whitePieces + whiteKings;
 		return (color == Color.BLACK ? 
-				(blackHeuristic - whiteHeuristic) : 
+				(blackHeuristic) : 
 					(whiteHeuristic));
 	}
 	
