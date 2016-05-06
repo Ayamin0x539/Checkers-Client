@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import controller.Game;
+import controller.GameConstants;
 import model.Board;
 import model.Color;
 import model.Move;
@@ -57,7 +58,7 @@ public class ServerPlayer extends Player {
 	public void listen(String name, String pass, String opponent) {
 		_socket = openSocket();
 		ArrayList<Move> moves;
-		ArrayList<Move> computerMoves;
+		ArrayList<Move> computerMoves = new ArrayList<Move>();
 		try{
 			readAndEcho(); //Start message
 			readAndEcho(); //User query
@@ -69,7 +70,7 @@ public class ServerPlayer extends Player {
 			System.out.println("Waiting on opponent: " + opponent);
 			String gameID = (readAndEcho().substring(5,9)); //Game ID
 			String selectedColor = readAndEcho().substring(6,11); //Color
-			System.out.println("I am playing as "+color+" in game number "+ gameID);
+			System.out.println("I am playing as "+selectedColor+" in game number "+ gameID);
 			if (selectedColor.equalsIgnoreCase("white")){ //Change colors accordingly
 				this.setColor(color.BLACK); //Almost caused a bug here. whoops!
 				game.getComputer().setColor(color.WHITE);
@@ -78,7 +79,9 @@ public class ServerPlayer extends Player {
 			else{
 				this.setColor(color.WHITE);
 				game.getComputer().setColor(color.BLACK);
-				computerMoves = makeMove(null); //Act first, probably won't work now
+				GameConstants.THUNK_COLOR = Color.BLACK;
+				GameConstants.THUNK_COLOR = Color.WHITE;
+				computerMoves.add(game.makeComputerMove()); //Act first, probably won't work now
 				String moveString = Communication.moveToString(computerMoves); //Put move into string
 				readAndEcho(); //Read move query
 				writeMessageAndEcho(moveString); //Send move string
